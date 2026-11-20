@@ -65,6 +65,19 @@ export function makeForm(alias, def, { title, published = 1, access = 1 } = {}) 
   fs.unlinkSync(file);
   return out.id;
 }
+/** Posts an admin task from the page that's open, with that page's session token (as the toolbar does). */
+export async function adminTask(p, task, fields = {}) {
+  const token = await p.evaluate(() => [...document.querySelectorAll('input[type=hidden][value="1"]')].map((i) => i.name).find((n) => /^[0-9a-f]{32}$/.test(n)));
+  if (!token) throw new Error('no session token on the page');
+  const r = await p.request.post(adminUrl(''), { form: { option: 'com_squidform', task, [token]: '1', ...fields } });
+  return r;
+}
+/** Saves a new definition for an existing form (as Save in the admin: checks, a new version, new columns). */
+export function saveForm(alias, def, note = '') {
+  const file = path.join(os.tmpdir(), `sf-save-${alias}-${process.pid}.json`);
+  fs.writeFileSync(file, typeof def === 'string' ? def : JSON.stringify(def));
+  try { return JSON.parse(sf('save', alias, file, note)).id; } finally { fs.unlinkSync(file); }
+}
 export function deleteForms(...aliases) { if (aliases.length) sf('delete', ...aliases); }
 export const formId = (alias) => Number(sql(`SELECT id FROM jos_squidform_forms WHERE alias='${esc(alias)}'`));
 

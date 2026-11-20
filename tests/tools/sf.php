@@ -53,6 +53,18 @@ switch ($cmd) {
         }
         echo "ok\n";
         break;
+    case 'save':
+        \defined('JPATH_COMPONENT') or \define('JPATH_COMPONENT', JPATH_ADMINISTRATOR . '/components/com_squidform');
+        // A new version of an existing form's definition, as Save in the admin does (checks, versions, data tables).
+        [$alias, $file] = [$argv[3], $argv[4]];
+        $row = $db->setQuery('SELECT id, title, alias, state, access FROM #__squidform_forms WHERE alias = ' . $db->quote($alias))->loadAssoc();
+        if (!$row) { fwrite(STDERR, "no form $alias\n"); exit(1); }
+        $m = $app->bootComponent('com_squidform')->getMVCFactory()->createModel('Form', 'Administrator', ['ignore_request' => true]);
+        $data = $row + ['schema_json' => (string) file_get_contents($file), 'version_note' => (string) ($argv[5] ?? '')];
+        $ok = ($v = $m->validate($m->getForm($data, false), $data)) !== false && $m->save($v);
+        if (!$ok) { fwrite(STDERR, strip_tags((string) $m->getError()) . "\n"); exit(1); }
+        echo json_encode(['id' => (int) $row['id']]), "\n";
+        break;
     case 'params':
         $p = \Joomla\CMS\Component\ComponentHelper::getParams('com_squidform');
         foreach (json_decode($argv[3], true) as $k => $v) { $p->set($k, $v); }
