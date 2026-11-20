@@ -243,3 +243,42 @@ export async function axe(p, what, include = null, exclude = []) {
     .map((x) => `${x.id} ×${x.nodes.length}: ${x.nodes.slice(0, 2).map((n) => n.target.join(' ')).join(' | ')}`);
   return ok(v.length === 0, `${what}: no axe violations${v.length ? ` (${v.join('; ')})` : ''}`);
 }
+
+// ------------------------------------------------------------------ menu items and modules
+/** A Main Menu item (alias must be unique); returns its id. link like "index.php?option=com_squidform&view=submissions&form_id=3". */
+export function menuItem(alias, title, link, params = {}, access = 1) {
+  deleteMenuItem(alias);
+  const component = /option=([a-z_]+)/.exec(link)[1];
+  const R = Number(sql('SELECT rgt FROM jos_menu WHERE id=1'));
+  sql(`UPDATE jos_menu SET rgt=rgt+2 WHERE rgt>=${R}`); sql(`UPDATE jos_menu SET lft=lft+2 WHERE lft>${R}`);
+  const cid = sql(`SELECT extension_id FROM jos_extensions WHERE element='${component}' AND type='component'`);
+  sql(`INSERT INTO jos_menu (menutype,title,alias,note,path,link,type,published,parent_id,level,component_id,checked_out,checked_out_time,browserNav,access,img,template_style_id,params,lft,rgt,home,language,client_id,publish_up,publish_down)
+       VALUES ('mainmenu','${esc(title)}','${esc(alias)}','','${esc(alias)}','${esc(link)}','component',1,1,1,${cid},NULL,NULL,0,${access},'',0,'${esc(JSON.stringify(params))}',${R},${R + 1},0,'*',0,NULL,NULL)`);
+  return Number(sql(`SELECT id FROM jos_menu WHERE alias='${esc(alias)}' AND menutype='mainmenu'`));
+}
+export function deleteMenuItem(alias) {
+  for (const id of sql(`SELECT id FROM jos_menu WHERE alias='${esc(alias)}' AND menutype='mainmenu'`).split('\n').filter(Boolean)) {
+    const [l, r] = sql(`SELECT CONCAT(lft,' ',rgt) FROM jos_menu WHERE id=${id}`).split(' ').map(Number);
+    sql(`DELETE FROM jos_menu WHERE id=${id}`);
+    sql(`UPDATE jos_menu SET rgt=rgt-${r - l + 1} WHERE rgt>${r}`); sql(`UPDATE jos_menu SET lft=lft-${r - l + 1} WHERE lft>${r}`);
+  }
+}
+/** A site module in a position, on all pages (or one menu item); returns its id. */
+export function addModule(module, title, params, { position = 'sidebar-right', menuId = 0, access = 1 } = {}) {
+  sql(`INSERT INTO jos_modules (title,note,content,ordering,position,checked_out,checked_out_time,publish_up,publish_down,published,module,access,showtitle,params,client_id,language)
+       VALUES ('${esc(title)}','','',1,'${position}',NULL,NULL,NULL,NULL,1,'${module}',${access},1,'${esc(JSON.stringify(params))}',0,'*')`);
+  const id = Number(sql('SELECT MAX(id) FROM jos_modules'));
+  sql(`INSERT INTO jos_modules_menu (moduleid,menuid) VALUES (${id},${menuId})`);
+  return id;
+}
+export function deleteModules(module) {
+  for (const id of sql(`SELECT id FROM jos_modules WHERE module='${module}' AND client_id=0`).split('\n').filter(Boolean)) {
+    sql(`DELETE FROM jos_modules_menu WHERE moduleid=${id}`); sql(`DELETE FROM jos_modules WHERE id=${id}`);
+  }
+}
+/** Sends a form as this page's person with these answers (first page only, then through to the end). */
+export async function send(p, alias, values, extra = '') {
+  await p.goto(formUrl(alias, extra));
+  await fill(p, values);
+  return submit(p);
+}

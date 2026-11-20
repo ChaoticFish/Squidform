@@ -2,6 +2,11 @@
 
 The detailed entries before 1.0.3 were lost with the old source folder (2026-11-20) and were rebuilt from the release notes, the roadmap and the landing page's changelog, so they're shorter than the originals.
 
+## Unreleased (next update)
+
+### Fixed
+- **Site viewer filters** didn't work with search-engine-friendly URLs switched off: the filter form's hidden inputs came out as `amp;view`. (Found by the rebuilt viewer test.)
+
 ## 1.0.3 (2026-11-20): add-on hooks
 
 Code only: no new tables, nothing changes for existing forms. Everything here lies dormant until an add-on (or a form) uses it.

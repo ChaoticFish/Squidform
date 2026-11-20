@@ -97,7 +97,9 @@ final class Viewer
             'mine'    => $mine,
             'names'   => ['filter' => 'filter', 'sort' => 'sort', 'dir' => 'dir', 'start' => 'limitstart', 'clear' => 'clear', 'prefix' => ''],
             'idp'     => 'sfv',
-            'pageUrl' => Route::_('index.php?Itemid=' . (int) $item->id),
+            // Unescaped (1.0.4): the list escapes it when printing; with search-engine-friendly URLs
+            // off, an escaped "&amp;" here broke the filter form's hidden inputs.
+            'pageUrl' => Route::_('index.php?Itemid=' . (int) $item->id, false),
         ];
     }
 
