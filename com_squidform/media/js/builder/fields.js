@@ -703,7 +703,8 @@ export function install(B) {
       ul.append(h('li.sfb-opt', ...parts));
     });
     const paste = B.textarea(items.map((x) => (separate ? `${x.value}|${x.label}` : x.label)).join('\n'), () => {}, { rows: 5, 'aria-label': 'All choices, one per line', dataset: { fid: 'opt-paste' } });
-    wrap.append(ul,
+    // DOM append() would print a null as the text "null" (1.0.4 fix).
+    wrap.append(...[ul,
       h('div.d-flex.gap-2.flex-wrap',
         B.button('+ Add a choice', () => { items.push({ value: `Option ${items.length + 1}`, label: `Option ${items.length + 1}` }); write(items, separate); }, 'btn-outline-secondary', { dataset: { fid: 'opt-add' } })),
       B.check('Store a different value than people see', separate, (v) => write(items, v), 'For example show “East office” but store “east”.'),
@@ -724,7 +725,7 @@ export function install(B) {
             return separate ? { value: a.trim(), label: (b ?? a).trim() } : { value: l, label: l };
           });
           write(list, separate);
-        }, 'btn-outline-primary mt-1')));
+        }, 'btn-outline-primary mt-1'))].filter(Boolean));
     return wrap;
   }
 

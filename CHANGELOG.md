@@ -6,6 +6,7 @@ The detailed entries before 1.0.3 were lost with the old source folder (2026-11-
 
 ### Fixed
 - **Site viewer filters** didn't work with search-engine-friendly URLs switched off: the filter form's hidden inputs came out as `amp;view`. (Found by the rebuilt viewer test.)
+- **Builder:** a dropdown's, radio list's or tick-box list's Choices settings showed a stray "null" (screen readers read it out). A new test opens every field type's settings and checks for this.
 
 ## 1.0.3 (2026-11-20): add-on hooks
 
