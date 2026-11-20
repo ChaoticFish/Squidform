@@ -21,6 +21,7 @@ export const DB = process.env.DB || (is54 ? 'j54' : 'j6');
 export const PASS = process.env.ADMIN_PASS || 'SquidTest!2026x';
 export const MAILDIR = process.env.MAILDIR || '/tmp/claude-0/-home-claude/3e9e5fa8-6400-57eb-a8e3-9230a399975a/scratchpad/mail';
 export const HERE = path.dirname(new URL(import.meta.url).pathname);
+export const FIXTURES = path.join(HERE, 'fixtures');
 export const EXAMPLES = path.join(HERE, '../com_squidform/admin/examples');
 export const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'];
 
@@ -56,6 +57,7 @@ export function makeForm(alias, def, { title, published = 1, access = 1 } = {}) 
   deleteForms(alias);
   let json = def;
   if (typeof def === 'string' && /^[a-z0-9_-]+$/.test(def)) json = fs.readFileSync(path.join(EXAMPLES, `${def}.json`), 'utf8');
+  else if (typeof def === 'string' && def.endsWith('.json')) json = fs.readFileSync(path.isAbsolute(def) ? def : path.join(HERE, 'fixtures', def), 'utf8');
   else if (typeof def !== 'string') json = JSON.stringify(def);
   const file = path.join(os.tmpdir(), `sf-${alias}-${process.pid}.json`);
   fs.writeFileSync(file, json);
@@ -196,8 +198,9 @@ export const field = (p, key) => p.locator(`[name="sf[${key}]"], [name="sf[${key
 /** Fills fields by key: strings for text, true/false for a tick box, arrays for tick-box lists, {select: v} for dropdowns. */
 export async function fill(p, values) {
   for (const [k, v] of Object.entries(values)) {
-    const el = p.locator(`[name="sf[${k}]"], [name="sf[${k}][]"]`);
+    const el = p.locator(`[name="sf[${k}]"]:not([type="hidden"]), [name="sf[${k}][]"]:not([type="hidden"])`);
     const first = el.first();
+    if (await el.count() === 0) { await p.locator(`[name="sf[${k}]"]`).evaluate((e, val) => { e.value = val; }, String(v)); continue; }
     const tag = await first.evaluate((e) => e.tagName.toLowerCase());
     const type = await first.getAttribute('type');
     if (tag === 'select') await first.selectOption(Array.isArray(v) ? v : String(v));

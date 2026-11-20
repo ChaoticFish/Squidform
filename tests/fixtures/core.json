@@ -1,0 +1,171 @@
+{
+  "schema": 1,
+  "settings": {
+    "submit_label": "Send it",
+    "show_title": true,
+    "success_message": "Thanks for sending it."
+  },
+  "pages": [
+    {
+      "key": "p_one",
+      "title": "About you",
+      "fields": [
+        {
+          "key": "f_name",
+          "type": "text",
+          "label": "Your name",
+          "rules": {
+            "required": true,
+            "max_length": 40
+          }
+        },
+        {
+          "key": "f_email",
+          "type": "email",
+          "label": "Your email",
+          "rules": {
+            "required": true
+          }
+        },
+        {
+          "key": "f_age",
+          "type": "number",
+          "label": "Age",
+          "rules": {
+            "min": 1,
+            "max": 120
+          }
+        },
+        {
+          "key": "f_from",
+          "type": "hidden",
+          "prefill": "{url:from}"
+        },
+        {
+          "key": "f_kind",
+          "type": "radios",
+          "label": "Kind",
+          "options": {
+            "static": [
+              {
+                "value": "cat",
+                "label": "Cat"
+              },
+              {
+                "value": "dog",
+                "label": "Dog"
+              }
+            ]
+          },
+          "rules": {
+            "required": true
+          }
+        },
+        {
+          "key": "f_meow",
+          "type": "text",
+          "label": "Meow volume",
+          "show_if": {
+            "field": "f_kind",
+            "op": "eq",
+            "value": "cat"
+          },
+          "rules": {
+            "required": true
+          }
+        }
+      ],
+      "events": {
+        "load": [],
+        "submit": []
+      }
+    },
+    {
+      "key": "p_two",
+      "title": "Your things",
+      "fields": [
+        {
+          "key": "f_rows",
+          "type": "repeater",
+          "label": "Things",
+          "row_label": "Thing",
+          "add_label": "Add a thing",
+          "max": 3,
+          "fields": [
+            {
+              "key": "x_item",
+              "type": "text",
+              "label": "Item"
+            },
+            {
+              "key": "x_qty",
+              "type": "number",
+              "label": "How many"
+            }
+          ]
+        },
+        {
+          "key": "c_total",
+          "type": "calc",
+          "label": "Total",
+          "formula": "sum({f_rows.x_qty})",
+          "decimals": 0
+        },
+        {
+          "key": "f_tags",
+          "type": "checkboxes",
+          "label": "Tags",
+          "options": {
+            "static": [
+              {
+                "value": "a",
+                "label": "Alpha"
+              },
+              {
+                "value": "b",
+                "label": "Beta"
+              },
+              {
+                "value": "c",
+                "label": "Gamma"
+              }
+            ]
+          }
+        },
+        {
+          "key": "f_note",
+          "type": "textarea",
+          "label": "Note"
+        }
+      ],
+      "events": {
+        "load": [],
+        "submit": [
+          {
+            "key": "a_save",
+            "type": "save_data",
+            "config": {
+              "target": "submissions"
+            }
+          },
+          {
+            "key": "a_mail",
+            "type": "email",
+            "config": {
+              "to": "staff@example.test",
+              "subject": "Core test from {data:f_name}",
+              "body": "{data:_all}"
+            }
+          },
+          {
+            "key": "a_msg",
+            "type": "message",
+            "config": {
+              "text": "Thanks, {data:f_name}! <script>alert(1)</script>"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
