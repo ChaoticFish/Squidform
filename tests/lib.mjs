@@ -1,0 +1,242 @@
+// Shared helpers for SquidForm's tests (Playwright + axe, a MariaDB test site).
+//
+// Environment:
+//   BASE        site address (default http://127.0.0.1:8080)
+//   SITE        the site's folder (default /home/claude/joomla/j6, or j54 for :8081)
+//   DB          its database (default j6, or j54 for :8081); table prefix jos_
+//   ADMIN_PASS  the password of the "admin" Super User
+//   MAILDIR     where the test sendmail writes messages
+//   CHROMIUM    optional browser path
+import { chromium } from 'playwright';
+import { AxeBuilder } from '@axe-core/playwright';
+import { execFileSync } from 'node:child_process';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+
+export const BASE = process.env.BASE || 'http://127.0.0.1:8080';
+const is54 = BASE.includes(':8081');
+export const SITE = process.env.SITE || (is54 ? '/home/claude/joomla/j54' : '/home/claude/joomla/j6');
+export const DB = process.env.DB || (is54 ? 'j54' : 'j6');
+export const PASS = process.env.ADMIN_PASS || 'SquidTest!2026x';
+export const MAILDIR = process.env.MAILDIR || '/tmp/claude-0/-home-claude/3e9e5fa8-6400-57eb-a8e3-9230a399975a/scratchpad/mail';
+export const HERE = path.dirname(new URL(import.meta.url).pathname);
+export const EXAMPLES = path.join(HERE, '../com_squidform/admin/examples');
+export const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'];
+
+// ------------------------------------------------------------------ results
+let passed = 0;
+let failed = 0;
+const failures = [];
+export function ok(cond, msg) {
+  if (cond) { passed++; console.log(`PASS  ${msg}`); } else { failed++; failures.push(msg); console.log(`FAIL  ${msg}`); }
+  return !!cond;
+}
+export async function step(what, fn) {
+  try { await fn(); } catch (e) { ok(false, `${what}: ran (${String(e.message).split('\n')[0]})`); }
+}
+export function finish() {
+  console.log(`${passed} pass, ${failed} fail`);
+  console.log(failed ? `${failed} FAILED` : 'ALL PASSED');
+  process.exitCode = failed ? 1 : 0;
+}
+export const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+
+// ------------------------------------------------------------------ database and SquidForm's own code
+export function sql(q) {
+  return execFileSync('mysql', ['-N', '--raw', '-B', DB], { input: q }).toString().replace(/\n$/, '');
+}
+export const esc = (s) => String(s).replace(/\\/g, '\\\\').replace(/'/g, "''");
+export function sf(...args) {
+  return execFileSync('php', [path.join(HERE, 'tools/sf.php'), SITE, ...args.map(String)], { stdio: ['ignore', 'pipe', 'pipe'] }).toString().trim();
+}
+
+/** Makes a form from a definition (object, JSON string or examples/<name>.json). Replaces any form with that alias. */
+export function makeForm(alias, def, { title, published = 1, access = 1 } = {}) {
+  deleteForms(alias);
+  let json = def;
+  if (typeof def === 'string' && /^[a-z0-9_-]+$/.test(def)) json = fs.readFileSync(path.join(EXAMPLES, `${def}.json`), 'utf8');
+  else if (typeof def !== 'string') json = JSON.stringify(def);
+  const file = path.join(os.tmpdir(), `sf-${alias}-${process.pid}.json`);
+  fs.writeFileSync(file, json);
+  const out = JSON.parse(sf('create', alias, title || `Test ${alias}`, file, published, access));
+  fs.unlinkSync(file);
+  return out.id;
+}
+export function deleteForms(...aliases) { if (aliases.length) sf('delete', ...aliases); }
+export const formId = (alias) => Number(sql(`SELECT id FROM jos_squidform_forms WHERE alias='${esc(alias)}'`));
+
+/** Sets Options (merged). Tests run with no minimum fill time and no rate limit unless they set them. */
+export function params(obj) { sf('params', JSON.stringify(obj)); }
+export function testDefaults(extra = {}) { params({ min_fill_seconds: 0, rate_limit_max: 0, ...extra }); }
+
+/** Makes (or resets) a site user in the given group titles; returns their id. Password is PASS. */
+export function ensureUser(username, groups = ['Registered'], { name, email } = {}) {
+  let id = Number(sql(`SELECT id FROM jos_users WHERE username='${esc(username)}'`));
+  const hash = execFileSync('php', ['-r', `echo password_hash($argv[1], PASSWORD_BCRYPT);`, PASS]).toString();
+  if (!id) {
+    sql(`INSERT INTO jos_users (name, username, email, password, block, sendEmail, registerDate, lastvisitDate, activation, params, lastResetTime, resetCount, otpKey, otep, requireReset)
+         VALUES ('${esc(name || username)}', '${esc(username)}', '${esc(email || `${username}@example.test`)}', '${esc(hash)}', 0, 0, NOW(), NULL, '', '{}', NULL, 0, '', '', 0)`);
+    id = Number(sql(`SELECT id FROM jos_users WHERE username='${esc(username)}'`));
+  } else {
+    sql(`UPDATE jos_users SET password='${esc(hash)}', block=0 WHERE id=${id}`);
+  }
+  sql(`DELETE FROM jos_user_usergroup_map WHERE user_id=${id}`);
+  for (const g of groups) {
+    const gid = ensureGroup(g);
+    sql(`INSERT IGNORE INTO jos_user_usergroup_map (user_id, group_id) VALUES (${id}, ${gid})`);
+  }
+  return id;
+}
+/** A user group by title (made under Registered if it's missing). */
+export function ensureGroup(title) {
+  let gid = Number(sql(`SELECT id FROM jos_usergroups WHERE title='${esc(title)}'`));
+  if (gid) return gid;
+  const R = Number(sql("SELECT rgt FROM jos_usergroups WHERE title='Registered'"));
+  const P = Number(sql("SELECT id FROM jos_usergroups WHERE title='Registered'"));
+  sql(`UPDATE jos_usergroups SET rgt=rgt+2 WHERE rgt>=${R}`);
+  sql(`UPDATE jos_usergroups SET lft=lft+2 WHERE lft>${R}`);
+  sql(`INSERT INTO jos_usergroups (parent_id, lft, rgt, title) VALUES (${P}, ${R}, ${R + 1}, '${esc(title)}')`);
+  return Number(sql(`SELECT id FROM jos_usergroups WHERE title='${esc(title)}'`));
+}
+
+// ------------------------------------------------------------------ mail
+export function clearMail() { fs.mkdirSync(MAILDIR, { recursive: true }); for (const f of fs.readdirSync(MAILDIR)) fs.unlinkSync(path.join(MAILDIR, f)); }
+/** Messages written since clearMail(): { to, subject, from, replyTo, html, text, raw, attachments: [{name, type}] } */
+export function mails() {
+  if (!fs.existsSync(MAILDIR)) return [];
+  return fs.readdirSync(MAILDIR).sort().map((f) => parseMail(fs.readFileSync(path.join(MAILDIR, f), 'utf8')));
+}
+export async function waitMail(n = 1, ms = 8000) {
+  const t = Date.now();
+  while (Date.now() - t < ms) { if (mails().length >= n) return mails(); await wait(200); }
+  return mails();
+}
+function decodeWords(s) {
+  return s.replace(/=\?([^?]+)\?([BbQq])\?([^?]*)\?=/g, (_, cs, enc, txt) => enc.toUpperCase() === 'B'
+    ? Buffer.from(txt, 'base64').toString('utf8')
+    : Buffer.from(txt.replace(/_/g, ' ').replace(/=([0-9A-F]{2})/gi, (m, h) => String.fromCharCode(parseInt(h, 16))), 'latin1').toString('utf8')).replace(/\?=\s+=\?/g, '');
+}
+function headers(block) {
+  const h = {};
+  block.replace(/\r?\n[ \t]+/g, ' ').split(/\r?\n/).forEach((l) => { const i = l.indexOf(':'); if (i > 0) h[l.slice(0, i).toLowerCase()] = l.slice(i + 1).trim(); });
+  return h;
+}
+function body(part, h) {
+  const enc = (h['content-transfer-encoding'] || '').toLowerCase();
+  if (enc === 'base64') return Buffer.from(part.replace(/\s+/g, ''), 'base64').toString('utf8');
+  if (enc === 'quoted-printable') return Buffer.from(part.replace(/=\r?\n/g, '').replace(/=([0-9A-F]{2})/gi, (m, x) => String.fromCharCode(parseInt(x, 16))), 'latin1').toString('utf8');
+  return part;
+}
+export function parseMail(raw) {
+  const [head, ...rest] = raw.split(/\r?\n\r?\n/);
+  const h = headers(head);
+  const out = { raw, to: decodeWords(h.to || ''), cc: decodeWords(h.cc || ''), bcc: decodeWords(h.bcc || ''), subject: decodeWords(h.subject || ''), from: decodeWords(h.from || ''), replyTo: decodeWords(h['reply-to'] || ''), html: '', text: '', attachments: [] };
+  const walk = (ctype, content) => {
+    const m = /boundary="?([^";]+)"?/i.exec(ctype);
+    if (m) {
+      for (const p of content.split(`--${m[1]}`).slice(1)) {
+        if (p.startsWith('--')) break;
+        const [ph, ...pb] = p.replace(/^\r?\n/, '').split(/\r?\n\r?\n/);
+        const hh = headers(ph);
+        walk(hh['content-type'] || 'text/plain', pb.join('\n\n'));
+        if (/attachment|name=/i.test(hh['content-disposition'] || '') || /name=/i.test(hh['content-type'] || '')) {
+          out.attachments.push({ name: decodeWords(((/name="?([^";]+)"?/i.exec(hh['content-disposition'] || hh['content-type'] || '') || [])[1]) || ''), type: (hh['content-type'] || '').split(';')[0], data: hh['content-transfer-encoding'] === 'base64' ? Buffer.from(pb.join('').replace(/\s+/g, ''), 'base64') : null });
+        }
+      }
+    } else if (/text\/html/i.test(ctype)) out.html ||= body(content, h);
+    else if (/text\/plain/i.test(ctype)) out.text ||= body(content, h);
+  };
+  const ct = h['content-type'] || 'text/plain';
+  if (/boundary=/i.test(ct)) walk(ct, rest.join('\n\n'));
+  else { const b = body(rest.join('\n\n'), h); if (/html/i.test(ct)) out.html = b; else out.text = b; }
+  return out;
+}
+
+// ------------------------------------------------------------------ browser
+let browser;
+export async function launch() {
+  browser = await chromium.launch(process.env.CHROMIUM ? { executablePath: process.env.CHROMIUM } : {});
+  return browser;
+}
+export async function close() { if (browser) await browser.close(); }
+export async function page(opts = {}) {
+  const ctx = await browser.newContext({ viewport: { width: 1280, height: 1000 }, ...opts });
+  const p = await ctx.newPage();
+  p.on('dialog', (d) => d.accept());
+  return p;
+}
+/** An administrator page, signed in as admin (or another back-end user). */
+export async function admin(username = 'admin', password = PASS) {
+  const p = await page();
+  await p.goto(`${BASE}/administrator/index.php`);
+  await p.fill('#mod-login-username', username);
+  await p.fill('#mod-login-password', password);
+  await Promise.all([p.waitForNavigation(), p.click('#btn-login-submit')]);
+  return p;
+}
+/** A site page, signed in as this user (or a guest when no user is given). */
+export async function site(username = null, password = PASS, opts = {}) {
+  const p = await page(opts);
+  if (username) {
+    await p.goto(`${BASE}/index.php?option=com_users&view=login`);
+    await p.fill('#username', username);
+    await p.fill('#password', password);
+    await Promise.all([p.waitForNavigation(), p.locator('form.com-users-login__form button[type="submit"], .com-users-login__submit button').first().click()]);
+  }
+  return p;
+}
+export const formUrl = (alias, extra = '') => `${BASE}/index.php?option=com_squidform&view=form&form=${alias}${extra}`;
+export const adminUrl = (q) => `${BASE}/administrator/index.php?option=com_squidform&${q}`;
+
+/** The form's own <form> on the page (other modules may have forms too). */
+export const theForm = (p, alias) => p.locator(`form[data-sf-alias="${alias}"]`).first();
+export const field = (p, key) => p.locator(`[name="sf[${key}]"], [name="sf[${key}][]"]`).first();
+
+/** Fills fields by key: strings for text, true/false for a tick box, arrays for tick-box lists, {select: v} for dropdowns. */
+export async function fill(p, values) {
+  for (const [k, v] of Object.entries(values)) {
+    const el = p.locator(`[name="sf[${k}]"], [name="sf[${k}][]"]`);
+    const first = el.first();
+    const tag = await first.evaluate((e) => e.tagName.toLowerCase());
+    const type = await first.getAttribute('type');
+    if (tag === 'select') await first.selectOption(Array.isArray(v) ? v : String(v));
+    else if (type === 'checkbox' && !Array.isArray(v)) { if (v) await first.check(); else await first.uncheck(); }
+    else if (type === 'checkbox' || type === 'radio') {
+      for (const one of [].concat(v)) await p.locator(`[name="sf[${k}]"][value="${one}"], [name="sf[${k}][]"][value="${one}"]`).check();
+    } else await first.fill(String(v));
+  }
+}
+/** Presses the page's Next/Send button and waits for the answer. */
+export async function next(p, value = 'next') {
+  await Promise.all([p.waitForNavigation({ timeout: 30000 }), p.locator(`button[name="sf_nav"][value="${value}"]`).first().click()]);
+}
+/** Through to the end: Next on every page, then Send on Check your answers if there is one.
+ *  (The offline human check holds the submit until it's solved, then sends it by itself.) Stops at an error summary. */
+export async function submit(p) {
+  for (let i = 0; i < 20; i++) {
+    if (await p.locator('.sf-error-summary').count()) return false;
+    if (await p.locator('button[name="sf_nav"][value="send"]').count()) { await next(p, 'send'); return !(await p.locator('.sf-error-summary').count()); }
+    if (!(await p.locator('button[name="sf_nav"][value="next"]').count())) return true;
+    await next(p, 'next');
+  }
+  return false;
+}
+export const text = async (p, sel = 'main, body') => ((await p.locator(sel).first().textContent()) || '').replace(/\s+/g, ' ').trim();
+
+/** Latest submission of a form: { id, uid, status, user_id, data } through SquidForm's reader. */
+export function latest(alias, q = {}) {
+  const rows = JSON.parse(sf('eval-api', alias, JSON.stringify({ status: ['draft', 'submitted', 'pending', 'approved', 'rejected', 'returned', 'withdrawn'], archived: null, test: true, order: [['created', 'desc']], limit: 1, ...q })));
+  return rows ? rows[0] : null;
+}
+export function answers(alias, q = {}) { return JSON.parse(sf('eval-api', alias, JSON.stringify(q))) || []; }
+
+export async function axe(p, what, include = null, exclude = []) {
+  let b = new AxeBuilder({ page: p }).withTags(TAGS);
+  if (include) b = b.include(include);
+  for (const x of exclude) b = b.exclude(x);
+  const r = await b.analyze();
+  const v = r.violations.filter((x) => ['serious', 'critical'].includes(x.impact) || x.id === 'color-contrast')
+    .map((x) => `${x.id} ×${x.nodes.length}: ${x.nodes.slice(0, 2).map((n) => n.target.join(' ')).join(' | ')}`);
+  return ok(v.length === 0, `${what}: no axe violations${v.length ? ` (${v.join('; ')})` : ''}`);
+}

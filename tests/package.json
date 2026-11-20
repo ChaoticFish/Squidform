@@ -1,0 +1,10 @@
+{
+  "name": "squidform-tests",
+  "private": true,
+  "type": "module",
+  "description": "End-to-end, security and accessibility tests for SquidForm (Playwright and axe).",
+  "dependencies": {
+    "@axe-core/playwright": "^4.10.0",
+    "playwright": "1.63.0"
+  }
+}
