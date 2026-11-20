@@ -76,6 +76,12 @@ export async function adminTask(p, task, fields = {}) {
 export function formRules(alias, rules) {
   sql(`UPDATE jos_assets a JOIN jos_squidform_forms f ON f.asset_id=a.id SET a.rules='${esc(JSON.stringify(rules))}' WHERE f.alias='${esc(alias)}'`);
 }
+/** Reads or replaces SquidForm's own permissions (Options → Permissions). */
+export function componentRules(rules) {
+  const was = JSON.parse(sql("SELECT rules FROM jos_assets WHERE name='com_squidform'") || '{}');
+  if (rules !== undefined) sql(`UPDATE jos_assets SET rules='${esc(JSON.stringify(rules))}' WHERE name='com_squidform'`);
+  return was;
+}
 export const groupId = (title) => Number(sql(`SELECT id FROM jos_usergroups WHERE title='${esc(title)}'`));
 /** Saves a new definition for an existing form (as Save in the admin: checks, a new version, new columns). */
 export function saveForm(alias, def, note = '') {
