@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension type="plugin" group="system" method="upgrade">
+	<name>plg_system_squidform</name>
+	<author>SquidForm Team</author>
+	<creationDate>2026-11-16</creationDate>
+	<copyright>(C) 2026 SquidForm</copyright>
+	<license>GNU General Public License version 2 or later</license>
+	<version>1.0.3</version>
+	<description>PLG_SYSTEM_SQUIDFORM_XML_DESCRIPTION</description>
+	<namespace path="src">SquidForm\Plugin\System\SquidForm</namespace>
+	<files>
+		<folder plugin="squidform">services</folder>
+		<folder>src</folder>
+	</files>
+	<languages>
+		<language tag="en-GB">language/en-GB/plg_system_squidform.ini</language>
+		<language tag="en-GB">language/en-GB/plg_system_squidform.sys.ini</language>
+	</languages>
+	<config>
+		<fields name="params">
+			<fieldset name="basic">
+				<field name="components" type="text" default="com_content" filter="string"
+					label="PLG_SYSTEM_SQUIDFORM_FIELD_COMPONENTS" description="PLG_SYSTEM_SQUIDFORM_FIELD_COMPONENTS_DESC" />
+			</fieldset>
+		</fields>
+	</config>
+</extension>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+	<layout title="COM_SQUIDFORM_MENU_APPROVALS_TITLE">
+		<message>COM_SQUIDFORM_MENU_APPROVALS_DESC</message>
+	</layout>
+	<!-- index.php?option=com_squidform&view=approvals -->
+</metadata>

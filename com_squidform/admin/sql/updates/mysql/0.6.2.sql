@@ -1,0 +1,3 @@
+--
+-- SquidForm 0.6.2: no schema changes.
+--

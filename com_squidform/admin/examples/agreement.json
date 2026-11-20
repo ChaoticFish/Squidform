@@ -1,0 +1,71 @@
+{
+  "schema": 1,
+  "settings": {
+    "submit_label": "Sign and send",
+    "show_title": true,
+    "rate_limit": false,
+    "intro": "<p>Please sign in, read the agreement, and sign it below. You'll be emailed a signed copy.</p>"
+  },
+  "pages": [
+    {
+      "key": "p_sign",
+      "title": "Agreement",
+      "fields": [
+        {
+          "key": "f_name",
+          "type": "text",
+          "label": "Full name",
+          "prefill": "{user:name}",
+          "prefill_lock": true,
+          "rules": {
+            "required": true
+          }
+        },
+        {
+          "key": "h_terms",
+          "type": "html",
+          "tag": "div",
+          "content": "<h3>Volunteer agreement</h3><p>Replace this text with your agreement. Keep it here, in the form, so the exact words are part of each signed record.</p><ul><li>I will follow the site's safety rules.</li><li>I will tell a coordinator if I can't make a shift.</li></ul>"
+        },
+        {
+          "key": "f_sig",
+          "type": "signature",
+          "label": "Your signature",
+          "rules": {
+            "required": true
+          },
+          "esign": {
+            "disclosure": "<p>You can ask for a paper copy of this agreement at any time. You can withdraw your consent to electronic records by contacting us; that doesn't undo signatures already made. You'll need a PDF reader to open the signed copy we email you.</p>",
+            "after_edit": "lock",
+            "retain_years": 7,
+            "send_copy": true
+          }
+        }
+      ],
+      "events": {
+        "load": [],
+        "submit": [
+          {
+            "key": "a_save",
+            "type": "save_data",
+            "config": {
+              "target": "submissions"
+            }
+          },
+          {
+            "key": "a_msg",
+            "type": "message",
+            "when": {
+              "action": "a_save",
+              "is": "success"
+            },
+            "config": {
+              "text": "<p>Signed. Your signed copy is on its way to your email.</p>",
+              "style": "success"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

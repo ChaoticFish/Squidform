@@ -1,0 +1,4 @@
+--
+-- SquidForm 0.8.1: no schema changes. Signature, grid, name and address
+-- answers are stored as JSON in the per-form tables; look-ups as text.
+--

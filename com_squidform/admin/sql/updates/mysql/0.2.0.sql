@@ -1,0 +1,2 @@
+-- 0.2.0: no schema changes. CSV/JSON export uses the existing tables;
+-- exports are recorded in #__squidform_audit with action "export".

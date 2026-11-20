@@ -1,0 +1,4 @@
+--
+-- SquidForm 0.10.2: no schema changes (check in uses the existing
+-- checked_out columns).
+--

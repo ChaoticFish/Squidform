@@ -1,0 +1,1 @@
+-- 1.0.0: no table changes.

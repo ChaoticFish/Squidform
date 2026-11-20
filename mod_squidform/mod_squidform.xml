@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension type="module" client="site" method="upgrade">
+	<name>mod_squidform</name>
+	<author>SquidForm Team</author>
+	<creationDate>2026-11-16</creationDate>
+	<copyright>(C) 2026 SquidForm</copyright>
+	<license>GNU General Public License version 2 or later</license>
+	<version>1.0.3</version>
+	<description>MOD_SQUIDFORM_XML_DESCRIPTION</description>
+	<namespace path="src">SquidForm\Module\SquidForm</namespace>
+	<files>
+		<folder module="mod_squidform">services</folder>
+		<folder>src</folder>
+		<folder>tmpl</folder>
+	</files>
+	<languages>
+		<language tag="en-GB">language/en-GB/mod_squidform.ini</language>
+		<language tag="en-GB">language/en-GB/mod_squidform.sys.ini</language>
+	</languages>
+	<config>
+		<fields name="params">
+			<fieldset name="basic" addfieldprefix="SquidForm\Component\SquidForm\Administrator\Field">
+				<field name="form" type="squidforms" valuefield="alias" label="MOD_SQUIDFORM_FIELD_FORM" required="true">
+					<option value="">MOD_SQUIDFORM_SELECT_FORM</option>
+				</field>
+			</fieldset>
+			<fieldset name="advanced">
+				<field name="layout" type="modulelayout" label="JFIELD_ALT_LAYOUT_LABEL" class="form-select" validate="moduleLayout" />
+				<field name="moduleclass_sfx" type="textarea" label="COM_MODULES_FIELD_MODULECLASS_SFX_LABEL" rows="3" validate="CssIdentifier" />
+				<!-- Forms carry one-time tokens, so module caching is always off. -->
+				<field name="cache" type="hidden" default="0" filter="integer" />
+			</fieldset>
+		</fields>
+	</config>
+</extension>

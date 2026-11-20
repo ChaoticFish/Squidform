@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension type="package" method="upgrade">
+	<name>SquidForm</name>
+	<packagename>squidform</packagename>
+	<author>SquidForm Team</author>
+	<creationDate>2026-11-16</creationDate>
+	<copyright>(C) 2026 SquidForm</copyright>
+	<license>GNU General Public License version 2 or later</license>
+	<version>1.0.3</version>
+	<description>SquidForm: forms, per-form data tables, submissions viewer (menu item and module), editing, export and archive for Joomla 5.4+ and 6.x, MySQL/MariaDB. SquidForm makes no outside calls; Joomla's update check uses the Chaotic Fish Design update site.</description>
+	<scriptfile>script.php</scriptfile>
+	<blockChildUninstall>true</blockChildUninstall>
+	<files folder="packages">
+		<file type="component" id="com_squidform">com_squidform.zip</file>
+		<file type="module" id="mod_squidform" client="site">mod_squidform.zip</file>
+		<file type="module" id="mod_squidform_viewer" client="site">mod_squidform_viewer.zip</file>
+		<file type="plugin" id="squidform" group="system">plg_system_squidform.zip</file>
+	</files>
+	<!-- 1.0.0: Joomla's Update screen checks the Chaotic Fish Design update site. SquidForm itself makes no outside
+	     calls. On a closed network, disable "Chaotic Fish Design" in System → Update Sites (see INSTALL.md). -->
+	<updateservers>
+		<server type="collection" name="Chaotic Fish Design">https://chaoticfishdesign.com/updates/cfd.xml</server>
+	</updateservers>
+</extension>

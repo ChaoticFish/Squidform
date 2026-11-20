@@ -1,0 +1,66 @@
+<?php
+
+/**
+ * An example SquidForm PHP handler. To try it, copy this file to
+ * TicketNumber.php (in the handler folder), then on the form's Logic tab add
+ * "Run PHP handler" → "Ticket number" before the email, and put {var:ticket}
+ * in the email's subject.
+ *
+ * It's here to show how a handler is written, so it's kept short: it counts
+ * the form's submissions, which can repeat a number after a deletion. For
+ * real numbering, use SquidForm's built-in Next number starter (Options →
+ * Developers → Starter handlers), which keeps a locked counter.
+ *
+ * The rules for a handler file:
+ *  - the file name is the class name (TicketNumber.php → class TicketNumber)
+ *  - the namespace is SquidFormHandler
+ *  - it starts with the _JEXEC line, so it can't be opened from a browser
+ *  - the class implements HandlerInterface (extending AbstractHandler is easiest)
+ *
+ * @license GNU General Public License version 2 or later
+ */
+
+namespace SquidFormHandler;
+
+use Joomla\CMS\Factory;
+use Joomla\Database\DatabaseInterface;
+use Joomla\Database\ParameterType;
+use SquidForm\Component\SquidForm\Administrator\Engine\ActionResult;
+use SquidForm\Component\SquidForm\Administrator\Engine\Context;
+use SquidForm\Component\SquidForm\Administrator\Engine\Handler\AbstractHandler;
+
+\defined('_JEXEC') or die;
+
+final class TicketNumber extends AbstractHandler
+{
+    public function label(): string
+    {
+        return 'Ticket number';
+    }
+
+    public function description(): string
+    {
+        return 'Makes a number such as HR-2026-0042 (this form’s submissions so far, plus one) and puts it in {var:ticket}.';
+    }
+
+    public function settings(): array
+    {
+        return ['prefix' => 'Starts with (for example HR)'];
+    }
+
+    public function run(Context $ctx, array $settings): ActionResult
+    {
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+        $id = (int) $ctx->form['id'];
+        $n  = (int) $db->setQuery(
+            $db->createQuery()->select('COUNT(*)')->from($db->quoteName('#__squidform_submissions'))
+                ->where($db->quoteName('form_id') . ' = :f')->bind(':f', $id, ParameterType::INTEGER)
+        )->loadResult();
+
+        $prefix = preg_replace('/[^A-Za-z0-9]/', '', $settings['prefix'] ?? '') ?: 'T';
+
+        $ctx->vars['ticket'] = sprintf('%s-%s-%04d', strtoupper($prefix), date('Y'), $n + 1);
+
+        return ActionResult::success($ctx->vars['ticket'], 'ticket ' . $ctx->vars['ticket']);
+    }
+}

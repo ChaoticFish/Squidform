@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "settings": {
+    "submit_label": "Send"
+  },
+  "pages": [
+    {
+      "key": "p_main",
+      "title": "Page 1",
+      "fields": [],
+      "events": {
+        "load": [],
+        "submit": [
+          {
+            "key": "a_save",
+            "type": "save_data",
+            "config": {
+              "target": "submissions"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

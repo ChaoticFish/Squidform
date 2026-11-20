@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+	<layout title="COM_SQUIDFORM_MENU_VIEWER_TITLE">
+		<message>COM_SQUIDFORM_MENU_VIEWER_DESC</message>
+	</layout>
+	<!-- index.php?option=com_squidform&view=submissions&form_id=ID -->
+	<fields name="request">
+		<fieldset name="request" addfieldprefix="SquidForm\Component\SquidForm\Administrator\Field">
+			<field name="form_id" type="squidforms" label="COM_SQUIDFORM_MENU_FIELD_FORM" required="true" filter="integer">
+				<option value="">COM_SQUIDFORM_SELECT_FORM</option>
+			</field>
+		</fieldset>
+	</fields>
+	<fields name="params">
+		<fieldset name="viewer" label="COM_SQUIDFORM_MENU_VIEWER_FIELDSET" addfieldprefix="SquidForm\Component\SquidForm\Administrator\Field">
+			<field name="viewer_note" type="note" label="" description="COM_SQUIDFORM_MENU_VIEWER_NOTE" class="alert alert-info" />
+			<field name="columns" type="squidformcolumnlist" filter="raw" label="COM_SQUIDFORM_MENU_COLUMNS" description="COM_SQUIDFORM_MENU_COLUMNS_DESC" />
+			<field name="filters" type="squidformcolumns" mode="filters" multiple="true" label="COM_SQUIDFORM_MENU_FILTERS" description="COM_SQUIDFORM_MENU_FILTERS_DESC" />
+			<field name="sort" type="squidformsort" label="COM_SQUIDFORM_MENU_SORT" description="COM_SQUIDFORM_MENU_SORT_DESC">
+				<option value="">COM_SQUIDFORM_MENU_USE_FORM</option>
+			</field>
+			<field name="sort_dir" type="list" label="COM_SQUIDFORM_MENU_SORT_DIR" default="">
+				<option value="">COM_SQUIDFORM_MENU_USE_FORM</option>
+				<option value="desc">COM_SQUIDFORM_MENU_SORT_DESC_OPT</option>
+				<option value="asc">COM_SQUIDFORM_MENU_SORT_ASC_OPT</option>
+			</field>
+			<field name="per_page" type="number" label="COM_SQUIDFORM_MENU_PER_PAGE" description="COM_SQUIDFORM_MENU_PER_PAGE_DESC" min="0" max="100" filter="integer" default="" />
+			<field name="show_search" type="radio" label="COM_SQUIDFORM_MENU_SHOW_SEARCH" layout="joomla.form.field.radio.switcher" default="1" filter="integer">
+				<option value="0">JHIDE</option>
+				<option value="1">JSHOW</option>
+			</field>
+		</fieldset>
+	</fields>
+</metadata>

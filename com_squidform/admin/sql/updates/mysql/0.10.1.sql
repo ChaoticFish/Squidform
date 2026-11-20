@@ -1,0 +1,4 @@
+--
+-- SquidForm 0.10.1: no schema changes. The EICAR test and the "ClamAV
+-- program" scan mode moved to the optional scanner add-on.
+--

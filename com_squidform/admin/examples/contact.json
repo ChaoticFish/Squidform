@@ -1,0 +1,124 @@
+{
+  "schema": 1,
+  "settings": {
+    "submit_label": "Send message",
+    "captcha": "pow",
+    "admin_email": "change-me@example.test",
+    "support_email": "change-me@example.test"
+  },
+  "pages": [
+    {
+      "key": "p_contact",
+      "title": "Contact us",
+      "fields": [
+        {
+          "key": "f_name",
+          "type": "text",
+          "label": "Your name",
+          "prefill": "{user:name}",
+          "autocomplete": "name",
+          "rules": {
+            "required": true,
+            "max_length": 120
+          }
+        },
+        {
+          "key": "f_email",
+          "type": "email",
+          "label": "Your email",
+          "prefill": "{user:email}",
+          "autocomplete": "email",
+          "rules": {
+            "required": true
+          }
+        },
+        {
+          "key": "f_topic",
+          "type": "select",
+          "label": "Topic",
+          "options": {
+            "static": [
+              "A question",
+              "A problem with the site",
+              "Something else"
+            ]
+          },
+          "rules": {
+            "required": true
+          }
+        },
+        {
+          "key": "f_message",
+          "type": "textarea",
+          "label": "Message",
+          "rows": 6,
+          "rules": {
+            "required": true,
+            "max_length": 5000
+          }
+        }
+      ],
+      "events": {
+        "load": [],
+        "submit": [
+          {
+            "key": "a_save",
+            "type": "save_data",
+            "config": {
+              "target": "submissions"
+            }
+          },
+          {
+            "key": "a_email",
+            "type": "email",
+            "when": {
+              "action": "a_save",
+              "is": "success"
+            },
+            "config": {
+              "to": "{setting:admin_email}",
+              "reply_to": "{data:f_email}",
+              "subject": "Contact {submission:ref}: {data:f_topic}",
+              "body": "{data:_all}",
+              "routes": [
+                {
+                  "when": {
+                    "field": "f_topic",
+                    "op": "eq",
+                    "value": "A problem with the site"
+                  },
+                  "to": "{setting:support_email}"
+                }
+              ]
+            }
+          },
+          {
+            "key": "a_confirm",
+            "type": "confirm_email",
+            "when": {
+              "action": "a_save",
+              "is": "success"
+            },
+            "config": {
+              "to_field": "f_email",
+              "subject": "We got your message ({submission:ref})",
+              "body": "<p>Thanks, {data:f_name}. We'll reply soon. Here's what you sent:</p>{data:_all}"
+            }
+          },
+          {
+            "key": "a_msg",
+            "type": "message",
+            "when": {
+              "action": "a_save",
+              "is": "success"
+            },
+            "config": {
+              "text": "<p>Thanks, {data:f_name}! Your message is on its way. A copy is in your inbox.</p>",
+              "style": "success"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

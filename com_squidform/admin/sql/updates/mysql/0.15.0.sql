@@ -1,0 +1,3 @@
+-- 0.15.0: the submissions table's is_test and language columns are added by
+-- script.php (repairColumns), which checks first, so an update can't stop on
+-- "Duplicate column" (MySQL has no ADD COLUMN IF NOT EXISTS).

@@ -1,0 +1,74 @@
+{
+  "$schema": "https://developer.joomla.org/schemas/json-schema/web_assets.json",
+  "name": "com_squidform",
+  "version": "0.9.2",
+  "description": "SquidForm front-end assets (bundled locally; no CDN)",
+  "license": "GPL-2.0-or-later",
+  "assets": [
+    {
+      "name": "com_squidform.form",
+      "type": "style",
+      "uri": "com_squidform/squidform.min.css"
+    },
+    {
+      "name": "com_squidform.themes",
+      "type": "style",
+      "uri": "com_squidform/squidform-themes.min.css",
+      "dependencies": [
+        "com_squidform.form"
+      ]
+    },
+    {
+      "name": "com_squidform.pow",
+      "type": "script",
+      "uri": "com_squidform/squidform-pow.js",
+      "attributes": {
+        "defer": true
+      }
+    },
+    {
+      "name": "com_squidform.form",
+      "type": "script",
+      "uri": "com_squidform/squidform.js",
+      "dependencies": [
+        "core"
+      ],
+      "attributes": {
+        "defer": true
+      }
+    },
+    {
+      "name": "com_squidform.definition",
+      "type": "script",
+      "uri": "com_squidform/squidform-definition.js",
+      "attributes": {
+        "defer": true
+      }
+    },
+    {
+      "name": "com_squidform.sortable",
+      "type": "script",
+      "uri": "com_squidform/vendor/sortablejs/Sortable.min.js",
+      "attributes": {
+        "defer": true
+      }
+    },
+    {
+      "name": "com_squidform.builder",
+      "type": "style",
+      "uri": "com_squidform/builder.css"
+    },
+    {
+      "name": "com_squidform.builder",
+      "type": "script",
+      "uri": "com_squidform/builder/main.js",
+      "dependencies": [
+        "core",
+        "com_squidform.sortable"
+      ],
+      "attributes": {
+        "type": "module"
+      }
+    }
+  ]
+}

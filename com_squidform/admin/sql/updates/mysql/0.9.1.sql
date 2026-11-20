@@ -1,0 +1,4 @@
+--
+-- SquidForm 0.9.1: no schema changes. Sections that ran to the next
+-- section are read as sections holding their fields (in the definition).
+--

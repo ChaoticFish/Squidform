@@ -1,0 +1,142 @@
+{
+  "schema": 1,
+  "settings": {
+    "admin_email": "change-me@example.test",
+    "success_message": "Request received. You'll get an email when it's decided.",
+    "captcha": "pow"
+  },
+  "pages": [
+    {
+      "key": "p_request",
+      "title": "Visitor request",
+      "fields": [
+        {
+          "key": "f_name",
+          "type": "text",
+          "label": "Your name",
+          "prefill": "{user:name}",
+          "prefill_lock": true,
+          "rules": {
+            "required": true
+          }
+        },
+        {
+          "key": "f_email",
+          "type": "email",
+          "label": "Your email",
+          "prefill": "{user:email}",
+          "prefill_lock": true,
+          "rules": {
+            "required": true
+          }
+        },
+        {
+          "key": "f_sup",
+          "type": "user",
+          "label": "Your supervisor",
+          "groups": [
+            "Supervisors"
+          ],
+          "rules": {
+            "required": true
+          }
+        },
+        {
+          "key": "f_kind",
+          "type": "select",
+          "label": "Visit type",
+          "options": {
+            "static": [
+              "Escorted",
+              "Unescorted"
+            ]
+          },
+          "rules": {
+            "required": true
+          }
+        },
+        {
+          "key": "f_visitors",
+          "type": "repeater",
+          "label": "Visitors",
+          "min": 1,
+          "max": 10,
+          "fields": [
+            {
+              "key": "f_vname",
+              "type": "text",
+              "label": "Visitor name",
+              "rules": {
+                "required": true
+              }
+            },
+            {
+              "key": "f_citizen",
+              "type": "select",
+              "label": "US citizen",
+              "options": {
+                "static": [
+                  "Yes",
+                  "No"
+                ]
+              },
+              "rules": {
+                "required": true
+              }
+            }
+          ]
+        }
+      ],
+      "events": {
+        "load": [],
+        "submit": [
+          {
+            "key": "a_save",
+            "type": "save_data",
+            "config": {
+              "target": "submissions"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "approval": {
+    "mode": "chain",
+    "notify": {
+      "submitter_email": "f_email"
+    },
+    "steps": [
+      {
+        "key": "s_sup",
+        "title": "Supervisor",
+        "approvers": [
+          "field:f_sup"
+        ]
+      },
+      {
+        "key": "s_sec",
+        "title": "Security",
+        "approvers": [
+          "group:Security"
+        ],
+        "when": {
+          "field": "f_citizen",
+          "op": "eq",
+          "value": "No"
+        }
+      }
+    ]
+  },
+  "on_approve": [
+    {
+      "key": "h_ok",
+      "type": "email",
+      "config": {
+        "to": "{setting:admin_email}",
+        "subject": "Approved: {form:title} {submission:ref}",
+        "body": "{data:_all}<p>Approved by {approval:by} at {approval:step_title}.</p>"
+      }
+    }
+  ]
+}

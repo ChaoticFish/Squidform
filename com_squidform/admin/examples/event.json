@@ -1,0 +1,127 @@
+{
+  "schema": 1,
+  "settings": {
+    "submit_label": "Register",
+    "show_title": true,
+    "copy_pdf": true,
+    "closes": "2030-12-31T17:00",
+    "closed_message": "<p>Registration has closed. Thank you for your interest!</p>",
+    "intro": "<p>Places are limited in each session. Registration closes on the date set in Settings.</p>"
+  },
+  "pages": [
+    {
+      "key": "p_reg",
+      "title": "Register",
+      "fields": [
+        {
+          "key": "f_name",
+          "type": "text",
+          "label": "Your name",
+          "prefill": "{user:name}",
+          "autocomplete": "name",
+          "rules": {
+            "required": true
+          }
+        },
+        {
+          "key": "f_email",
+          "type": "email",
+          "label": "Your email",
+          "prefill": "{user:email}",
+          "autocomplete": "email",
+          "confirm": true,
+          "rules": {
+            "required": true
+          }
+        },
+        {
+          "key": "f_org",
+          "type": "text",
+          "label": "Organisation",
+          "autocomplete": "organization"
+        },
+        {
+          "key": "f_session",
+          "type": "radios",
+          "label": "Session",
+          "show_left": true,
+          "rules": {
+            "required": true
+          },
+          "options": {
+            "static": [
+              {
+                "value": "am",
+                "label": "Morning workshop (9:00–12:00)",
+                "max": 25
+              },
+              {
+                "value": "pm",
+                "label": "Afternoon workshop (13:00–16:00)",
+                "max": 25
+              }
+            ]
+          }
+        },
+        {
+          "key": "f_meal",
+          "type": "checkboxes",
+          "label": "Lunch",
+          "options": {
+            "static": [
+              "Vegetarian",
+              "Vegan",
+              "Gluten-free",
+              "No lunch, thanks"
+            ]
+          }
+        },
+        {
+          "key": "f_access",
+          "type": "textarea",
+          "label": "Anything we can do to make the day work for you?",
+          "rows": 3,
+          "help": "Access needs, interpreters, quiet space, anything else."
+        }
+      ],
+      "events": {
+        "load": [],
+        "submit": [
+          {
+            "key": "a_save",
+            "type": "save_data",
+            "config": {
+              "target": "submissions"
+            }
+          },
+          {
+            "key": "a_confirm",
+            "type": "confirm_email",
+            "when": {
+              "action": "a_save",
+              "is": "success"
+            },
+            "config": {
+              "to_field": "f_email",
+              "subject": "You're registered ({submission:ref})",
+              "attach_pdf": true,
+              "body": "<p>Thanks, {data:f_name}. You're booked on the <strong>{data.label:f_session}</strong>. Your registration is attached.</p>"
+            }
+          },
+          {
+            "key": "a_msg",
+            "type": "message",
+            "when": {
+              "action": "a_save",
+              "is": "success"
+            },
+            "config": {
+              "text": "<p>You're registered for the {data.label:f_session}. A confirmation is on its way to {data:f_email}.</p>",
+              "style": "success"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

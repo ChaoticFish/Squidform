@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form addfieldprefix="SquidForm\Component\SquidForm\Administrator\Field">
+	<fields name="filter">
+		<field name="search" type="text" inputmode="search" label="COM_SQUIDFORM_FILTER_SEARCH_SUBMISSIONS" description="COM_SQUIDFORM_FILTER_SEARCH_SUBMISSIONS_DESC" hint="JSEARCH_FILTER" />
+		<field name="form_id" type="squidforms" acl="squidform.view" label="COM_SQUIDFORM_FILTER_FORM" onchange="this.form.submit();" all="true">
+			<option value="">COM_SQUIDFORM_FILTER_FORM_ALL</option>
+		</field>
+		<field name="status" type="list" label="COM_SQUIDFORM_FILTER_STATUS" onchange="this.form.submit();">
+			<option value="">COM_SQUIDFORM_FILTER_STATUS_ALL</option>
+			<option value="draft">COM_SQUIDFORM_STATUS_DRAFT</option>
+			<option value="submitted">COM_SQUIDFORM_STATUS_SUBMITTED</option>
+			<option value="pending">COM_SQUIDFORM_STATUS_PENDING</option>
+			<option value="approved">COM_SQUIDFORM_STATUS_APPROVED</option>
+			<option value="rejected">COM_SQUIDFORM_STATUS_REJECTED</option>
+			<option value="returned">COM_SQUIDFORM_STATUS_RETURNED</option>
+			<option value="withdrawn">COM_SQUIDFORM_STATUS_WITHDRAWN</option>
+		</field>
+		<field name="awaiting" type="list" label="COM_SQUIDFORM_FILTER_AWAITING" onchange="this.form.submit();">
+			<option value="">COM_SQUIDFORM_FILTER_AWAITING_ALL</option>
+			<option value="me">COM_SQUIDFORM_FILTER_AWAITING_ME</option>
+		</field>
+		<field name="archived" type="list" label="COM_SQUIDFORM_FILTER_DELETED" onchange="this.form.submit();" default="0">
+			<option value="0">COM_SQUIDFORM_FILTER_DELETED_NO</option>
+			<option value="1">COM_SQUIDFORM_FILTER_DELETED_YES</option>
+		</field>
+	</fields>
+	<fields name="list">
+		<field name="fullordering" type="list" label="JGLOBAL_SORT_BY" default="s.created DESC" onchange="this.form.submit();" validate="options">
+			<option value="">JGLOBAL_SORT_BY</option>
+			<option value="s.created DESC">COM_SQUIDFORM_SORT_NEWEST</option>
+			<option value="s.created ASC">COM_SQUIDFORM_SORT_OLDEST</option>
+			<option value="s.id ASC">JGRID_HEADING_ID_ASC</option>
+			<option value="s.id DESC">JGRID_HEADING_ID_DESC</option>
+		</field>
+		<field name="limit" type="limitbox" label="JGLOBAL_LIST_LIMIT" default="25" onchange="this.form.submit();" />
+	</fields>
+</form>

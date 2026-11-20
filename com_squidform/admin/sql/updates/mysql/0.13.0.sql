@@ -1,0 +1,2 @@
+-- 0.13.0: no table changes. Activity reads #__squidform_audit (index idx_form_created);
+-- named values and CSV attachments need nothing new.

@@ -1,0 +1,93 @@
+{
+  "schema": 1,
+  "settings": {
+    "submit_label": "Send report",
+    "captcha": "pow",
+    "admin_email": "change-me@example.test",
+    "intro": "<p>Something didn't work. Tell us what you were doing and we'll look into it.</p>"
+  },
+  "pages": [
+    {
+      "key": "p_report",
+      "title": "Report a problem",
+      "fields": [
+        {
+          "key": "f_code",
+          "type": "text",
+          "label": "Error",
+          "url_param": "code",
+          "width": 4,
+          "readonly": true
+        },
+        {
+          "key": "f_page",
+          "type": "url",
+          "label": "Page that went wrong",
+          "url_param": "page",
+          "width": 8,
+          "readonly": true
+        },
+        {
+          "key": "f_from",
+          "type": "hidden",
+          "url_param": "from"
+        },
+        {
+          "key": "f_what",
+          "type": "textarea",
+          "label": "What were you trying to do?",
+          "rows": 4,
+          "rules": {
+            "required": true,
+            "max_length": 3000
+          }
+        },
+        {
+          "key": "f_email",
+          "type": "email",
+          "label": "Your email, if you'd like a reply",
+          "autocomplete": "email",
+          "prefill": "{user:email}"
+        }
+      ],
+      "events": {
+        "load": [],
+        "submit": [
+          {
+            "key": "a_save",
+            "type": "save_data",
+            "config": {
+              "target": "submissions"
+            }
+          },
+          {
+            "key": "a_email",
+            "type": "email",
+            "when": {
+              "action": "a_save",
+              "is": "success"
+            },
+            "config": {
+              "to": "{setting:admin_email}",
+              "reply_to": "{data:f_email}",
+              "subject": "Problem report {submission:ref}: {data:f_code} on {data:f_page}",
+              "body": "<p>Came from: {data:f_from}</p>{data:_all}"
+            }
+          },
+          {
+            "key": "a_msg",
+            "type": "message",
+            "when": {
+              "action": "a_save",
+              "is": "success"
+            },
+            "config": {
+              "text": "<p>Thanks for telling us. We'll take a look.</p>",
+              "style": "success"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

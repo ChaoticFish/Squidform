@@ -1,0 +1,1 @@
+-- 1.0.3: no table changes (the add-on reader and hooks are code only).

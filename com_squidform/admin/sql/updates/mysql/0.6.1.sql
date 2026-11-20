@@ -1,0 +1,3 @@
+--
+-- SquidForm 0.6.1: no schema changes (the default View Own / Edit Own permissions are set by the install script).
+--

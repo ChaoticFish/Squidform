@@ -1,0 +1,229 @@
+{
+  "schema": 1,
+  "settings": {
+    "submit_label": "Apply",
+    "show_title": true,
+    "save_later": true,
+    "save_later_guests": true,
+    "intro": "<p>This takes about ten minutes. You can save it and finish later.</p>"
+  },
+  "pages": [
+    {
+      "key": "p_you",
+      "title": "About you",
+      "fields": [
+        {
+          "key": "f_name",
+          "type": "name",
+          "label": "Your name",
+          "rules": {
+            "required": true
+          }
+        },
+        {
+          "key": "f_email",
+          "type": "email",
+          "label": "Email",
+          "autocomplete": "email",
+          "rules": {
+            "required": true
+          }
+        },
+        {
+          "key": "f_phone",
+          "type": "phone",
+          "label": "Phone"
+        },
+        {
+          "key": "f_adult",
+          "type": "radios",
+          "label": "Are you 18 or over?",
+          "inline": true,
+          "rules": {
+            "required": true
+          },
+          "options": {
+            "static": [
+              "Yes",
+              "No"
+            ]
+          }
+        },
+        {
+          "key": "h_young",
+          "type": "html",
+          "tag": "p",
+          "content": "Under 18? Please ask a parent or guardian to get in touch with us instead.",
+          "show_if": {
+            "field": "f_adult",
+            "op": "eq",
+            "value": "No"
+          }
+        }
+      ],
+      "events": {
+        "load": [],
+        "submit": []
+      }
+    },
+    {
+      "key": "p_help",
+      "title": "How you'd like to help",
+      "fields": [
+        {
+          "key": "f_roles",
+          "type": "checkboxes",
+          "label": "I'd like to help with",
+          "rules": {
+            "required": true
+          },
+          "options": {
+            "static": [
+              "Animal care",
+              "Events",
+              "Fundraising",
+              "Repairs and building",
+              "Office work"
+            ]
+          }
+        },
+        {
+          "key": "f_days",
+          "type": "checkboxes",
+          "label": "Days I'm usually free",
+          "options": {
+            "static": [
+              "Mon",
+              "Tue",
+              "Wed",
+              "Thu",
+              "Fri",
+              "Sat",
+              "Sun"
+            ]
+          },
+          "inline": true
+        },
+        {
+          "key": "f_animals",
+          "type": "radios",
+          "label": "Have you worked with animals before?",
+          "inline": true,
+          "options": {
+            "static": [
+              "Yes",
+              "No"
+            ]
+          }
+        }
+      ],
+      "events": {
+        "load": [],
+        "submit": []
+      }
+    },
+    {
+      "key": "p_exp",
+      "title": "Your experience with animals",
+      "show_if": {
+        "field": "f_animals",
+        "op": "eq",
+        "value": "Yes"
+      },
+      "fields": [
+        {
+          "key": "f_exp",
+          "type": "textarea",
+          "label": "Tell us about it",
+          "rows": 5,
+          "rules": {
+            "required": true
+          }
+        },
+        {
+          "key": "f_kinds",
+          "type": "checkboxes",
+          "label": "Which animals?",
+          "options": {
+            "static": [
+              "Dogs",
+              "Cats",
+              "Horses",
+              "Farm animals",
+              "Wildlife",
+              "Other"
+            ]
+          }
+        }
+      ],
+      "events": {
+        "load": [],
+        "submit": []
+      }
+    },
+    {
+      "key": "p_finish",
+      "title": "Last step",
+      "fields": [
+        {
+          "key": "f_cv",
+          "type": "upload",
+          "label": "CV or résumé (optional)",
+          "accept": [
+            "pdf",
+            "doc",
+            "docx",
+            "odt"
+          ],
+          "max_files": 1,
+          "help": "PDF or Word, if you have one."
+        },
+        {
+          "key": "f_ok",
+          "type": "consent",
+          "label": "Privacy",
+          "terms": "<p>We keep your application to arrange volunteering and delete it after two years if you don't volunteer with us.</p>",
+          "rules": {
+            "required": true
+          }
+        }
+      ],
+      "events": {
+        "load": [],
+        "submit": [
+          {
+            "key": "a_save",
+            "type": "save_data",
+            "config": {
+              "target": "submissions"
+            }
+          },
+          {
+            "key": "a_confirm",
+            "type": "confirm_email",
+            "when": {
+              "action": "a_save",
+              "is": "success"
+            },
+            "config": {
+              "to_field": "f_email",
+              "subject": "Thanks for applying ({submission:ref})"
+            }
+          },
+          {
+            "key": "a_msg",
+            "type": "message",
+            "when": {
+              "action": "a_save",
+              "is": "success"
+            },
+            "config": {
+              "text": "<p>Thank you! We'll be in touch soon.</p>",
+              "style": "success"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

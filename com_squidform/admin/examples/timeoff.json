@@ -1,0 +1,202 @@
+{
+  "schema": 1,
+  "settings": {
+    "submit_label": "Send request",
+    "show_title": true,
+    "rate_limit": false,
+    "admin_email": "change-me@example.test",
+    "intro": "<p>Sign in, pick your manager and your dates. Requests over five days also go to HR.</p>"
+  },
+  "pages": [
+    {
+      "key": "p_request",
+      "title": "Your request",
+      "fields": [
+        {
+          "key": "f_name",
+          "type": "text",
+          "label": "Your name",
+          "prefill": "{user:name}",
+          "prefill_lock": true,
+          "width": 6,
+          "rules": {
+            "required": true
+          }
+        },
+        {
+          "key": "f_email",
+          "type": "email",
+          "label": "Your email",
+          "prefill": "{user:email}",
+          "prefill_lock": true,
+          "width": 6,
+          "rules": {
+            "required": true
+          }
+        },
+        {
+          "key": "f_manager",
+          "type": "user",
+          "label": "Your manager",
+          "groups": [
+            "Manager"
+          ],
+          "help": "Members of the Manager user group.",
+          "rules": {
+            "required": true
+          }
+        },
+        {
+          "key": "f_kind",
+          "type": "radios",
+          "label": "Kind of leave",
+          "inline": true,
+          "rules": {
+            "required": true
+          },
+          "options": {
+            "static": [
+              "Vacation",
+              "Sick",
+              "Personal",
+              "Training"
+            ]
+          }
+        },
+        {
+          "key": "f_dates",
+          "type": "daterange",
+          "label": "Dates",
+          "max_days": 30,
+          "rules": {
+            "required": true
+          }
+        },
+        {
+          "key": "f_partday",
+          "type": "checkbox",
+          "label": "Part of a day only"
+        },
+        {
+          "key": "f_from_time",
+          "type": "time",
+          "label": "From",
+          "width": 6,
+          "show_if": {
+            "field": "f_partday",
+            "op": "eq",
+            "value": "1"
+          },
+          "rules": {
+            "required": true,
+            "min": "07:00",
+            "max": "19:00"
+          }
+        },
+        {
+          "key": "f_to_time",
+          "type": "time",
+          "label": "To",
+          "width": 6,
+          "show_if": {
+            "field": "f_partday",
+            "op": "eq",
+            "value": "1"
+          },
+          "rules": {
+            "required": true,
+            "min": "07:00",
+            "max": "19:00"
+          }
+        },
+        {
+          "key": "c_days",
+          "type": "calc",
+          "label": "Days asked for",
+          "formula": "days({f_dates})",
+          "decimals": 0,
+          "suffix": " days"
+        },
+        {
+          "key": "f_reason",
+          "type": "textarea",
+          "label": "Anything your manager should know",
+          "rows": 3,
+          "counter": true,
+          "rules": {
+            "max_length": 500
+          }
+        }
+      ],
+      "events": {
+        "load": [],
+        "submit": [
+          {
+            "key": "a_save",
+            "type": "save_data",
+            "config": {
+              "target": "submissions"
+            }
+          },
+          {
+            "key": "a_msg",
+            "type": "message",
+            "when": {
+              "action": "a_save",
+              "is": "success"
+            },
+            "config": {
+              "text": "<p>Sent to your manager. You'll get an email when it's decided.</p>",
+              "style": "success"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "approval": {
+    "mode": "chain",
+    "notify": {
+      "submitter_email": "f_email"
+    },
+    "steps": [
+      {
+        "key": "s_manager",
+        "title": "Manager",
+        "approvers": [
+          "field:f_manager"
+        ]
+      },
+      {
+        "key": "s_hr",
+        "title": "HR",
+        "approvers": [
+          "group:Administrator"
+        ],
+        "when": {
+          "field": "c_days",
+          "op": "gt",
+          "value": 5
+        }
+      }
+    ]
+  },
+  "viewer": {
+    "columns": [
+      "uid",
+      "f_name",
+      "f_kind",
+      "f_dates",
+      "c_days",
+      "status",
+      "created"
+    ],
+    "filters": [
+      "f_kind",
+      "status",
+      "created"
+    ],
+    "sort": "created desc",
+    "per_page": 20
+  }
+}

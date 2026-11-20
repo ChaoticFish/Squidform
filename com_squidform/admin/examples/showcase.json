@@ -1,0 +1,560 @@
+{
+  "schema": 1,
+  "settings": {
+    "submit_label": "Send",
+    "show_title": true,
+    "captcha": "pow",
+    "intro": "<p>Every kind of field SquidForm has, one group per page. Nothing here is required, so skip around.</p>"
+  },
+  "pages": [
+    {
+      "key": "p_text",
+      "title": "Text",
+      "fields": [
+        {
+          "key": "f_text",
+          "type": "text",
+          "label": "Text (one line), with a character counter",
+          "counter": true,
+          "rules": {
+            "max_length": 60
+          }
+        },
+        {
+          "key": "f_textarea",
+          "type": "textarea",
+          "label": "Text box (several lines)",
+          "rows": 3,
+          "counter": true,
+          "rules": {
+            "max_length": 300
+          }
+        },
+        {
+          "key": "f_editor",
+          "type": "editor",
+          "label": "Formatted text",
+          "rows": 5
+        },
+        {
+          "key": "f_email",
+          "type": "email",
+          "label": "Email, typed twice",
+          "confirm": true,
+          "width": 6
+        },
+        {
+          "key": "f_number",
+          "type": "number",
+          "label": "Number from 1 to 10",
+          "width": 6,
+          "rules": {
+            "min": 1,
+            "max": 10
+          }
+        },
+        {
+          "key": "f_tel",
+          "type": "tel",
+          "label": "Phone with a mask",
+          "mask": "(999) 999-9999",
+          "width": 6
+        },
+        {
+          "key": "f_url",
+          "type": "url",
+          "label": "Web address",
+          "width": 6,
+          "placeholder": "https://"
+        },
+        {
+          "key": "f_code",
+          "type": "text",
+          "label": "Code with a pattern",
+          "help": "Three capital letters, then digits.",
+          "rules": {
+            "pattern": "[A-Z]{3}[0-9]+",
+            "pattern_message": "Three capital letters, then digits, like ABC123."
+          },
+          "width": 6
+        },
+        {
+          "key": "f_pin",
+          "type": "text",
+          "label": "Hide what's typed (with a Show button)",
+          "hide_input": true,
+          "width": 6
+        },
+        {
+          "key": "f_hidden",
+          "type": "hidden",
+          "prefill": "{url:from}"
+        }
+      ],
+      "events": {
+        "load": [],
+        "submit": []
+      }
+    },
+    {
+      "key": "p_dates",
+      "title": "Dates and times",
+      "fields": [
+        {
+          "key": "f_date",
+          "type": "date",
+          "label": "Date",
+          "width": 6
+        },
+        {
+          "key": "f_time",
+          "type": "time",
+          "label": "Time",
+          "width": 6
+        },
+        {
+          "key": "f_datetime",
+          "type": "datetime",
+          "label": "Date and time",
+          "width": 6
+        },
+        {
+          "key": "f_range",
+          "type": "daterange",
+          "label": "Date range (up to 14 days)",
+          "max_days": 14
+        },
+        {
+          "key": "c_nights",
+          "type": "calc",
+          "label": "Calculation: days in that range",
+          "formula": "days({f_range})",
+          "decimals": 0
+        }
+      ],
+      "events": {
+        "load": [],
+        "submit": []
+      }
+    },
+    {
+      "key": "p_choices",
+      "title": "Choices",
+      "fields": [
+        {
+          "key": "f_select",
+          "type": "select",
+          "label": "Dropdown",
+          "width": 6,
+          "options": {
+            "static": [
+              "Squid",
+              "Octopus",
+              "Cuttlefish"
+            ]
+          }
+        },
+        {
+          "key": "f_radios",
+          "type": "radios",
+          "label": "Radio buttons",
+          "inline": true,
+          "width": 6,
+          "options": {
+            "static": [
+              "Yes",
+              "No",
+              "Maybe"
+            ]
+          }
+        },
+        {
+          "key": "f_checks",
+          "type": "checkboxes",
+          "label": "Tick boxes (up to 2)",
+          "rules": {
+            "max_selected": 2
+          },
+          "options": {
+            "static": [
+              "Arms",
+              "Tentacles",
+              "Ink",
+              "Beak"
+            ]
+          }
+        },
+        {
+          "key": "f_search",
+          "type": "select",
+          "label": "Dropdown you can search (type a few letters)",
+          "search": true,
+          "options": {
+            "static": [
+              "Anemone",
+              "Angelfish",
+              "Barracuda",
+              "Blue tang",
+              "Clownfish",
+              "Coral",
+              "Cuttlefish",
+              "Dolphin",
+              "Eel",
+              "Hermit crab",
+              "Jellyfish",
+              "Lobster",
+              "Manta ray",
+              "Nautilus",
+              "Octopus",
+              "Orca",
+              "Pufferfish",
+              "Sea horse",
+              "Sea urchin",
+              "Squid",
+              "Starfish",
+              "Turtle",
+              "Whale shark",
+              "Wrasse"
+            ]
+          }
+        },
+        {
+          "key": "f_multi",
+          "type": "multiselect",
+          "label": "Dropdown (several choices)",
+          "options": {
+            "static": [
+              "Reef",
+              "Open sea",
+              "Deep sea",
+              "Tide pool",
+              "Aquarium"
+            ]
+          }
+        },
+        {
+          "key": "f_check",
+          "type": "checkbox",
+          "label": "A single tick box"
+        },
+        {
+          "key": "f_lookup",
+          "type": "lookup",
+          "label": "Look-up (type to search)",
+          "min_chars": 1,
+          "options": {
+            "static": [
+              "Atlantic",
+              "Pacific",
+              "Indian",
+              "Southern",
+              "Arctic",
+              "Mediterranean",
+              "Caribbean",
+              "North Sea",
+              "Red Sea",
+              "Baltic"
+            ]
+          }
+        },
+        {
+          "key": "f_rating",
+          "type": "rating",
+          "label": "Rating",
+          "max": 5,
+          "low_label": "Meh",
+          "high_label": "Wow"
+        },
+        {
+          "key": "f_slider",
+          "type": "slider",
+          "label": "Slider",
+          "min": 0,
+          "max": 100,
+          "step": 5,
+          "unit": "%"
+        },
+        {
+          "key": "f_ranking",
+          "type": "ranking",
+          "label": "Ranking",
+          "items": [
+            "Speed",
+            "Camouflage",
+            "Intelligence"
+          ]
+        },
+        {
+          "key": "f_images",
+          "type": "imagechoice",
+          "label": "Image choice (pick any)",
+          "multiple": true,
+          "choices": [
+            {
+              "value": "pond",
+              "label": "Walden Pond",
+              "image": "images/headers/walden-pond.jpg",
+              "alt": ""
+            },
+            {
+              "value": "windows",
+              "label": "Windows",
+              "image": "images/headers/windows.jpg",
+              "alt": ""
+            },
+            {
+              "value": "maple",
+              "label": "Maple",
+              "image": "images/headers/maple.jpg",
+              "alt": ""
+            }
+          ]
+        },
+        {
+          "key": "f_grid",
+          "type": "grid",
+          "label": "Grid of tick boxes",
+          "cell": "checkbox",
+          "rows": [
+            "Monday",
+            "Wednesday",
+            "Friday"
+          ],
+          "columns": [
+            "Morning",
+            "Afternoon"
+          ]
+        },
+        {
+          "key": "f_grid_sel",
+          "type": "grid",
+          "label": "Grid of dropdowns",
+          "cell": "select",
+          "choices": [
+            "Low",
+            "Medium",
+            "High"
+          ],
+          "rows": [
+            "Effort",
+            "Impact"
+          ],
+          "columns": [
+            "Now",
+            "Next year"
+          ]
+        }
+      ],
+      "events": {
+        "load": [],
+        "submit": []
+      }
+    },
+    {
+      "key": "p_people",
+      "title": "People and places",
+      "fields": [
+        {
+          "key": "f_name",
+          "type": "name",
+          "label": "Name",
+          "parts": [
+            "title",
+            "first",
+            "last",
+            "suffix"
+          ]
+        },
+        {
+          "key": "f_address",
+          "type": "address",
+          "label": "Address (international)",
+          "format": "intl",
+          "default_country": "GB"
+        },
+        {
+          "key": "f_phone",
+          "type": "phone",
+          "label": "Phone with country code",
+          "default_country": "US"
+        },
+        {
+          "key": "h_user",
+          "type": "html",
+          "tag": "p",
+          "content": "The user picker (choose a site account) is on the Time-off request sample: it lists people's names, so it belongs on a signed-in form."
+        }
+      ],
+      "events": {
+        "load": [],
+        "submit": []
+      }
+    },
+    {
+      "key": "p_layout",
+      "title": "Layout, files and signing",
+      "fields": [
+        {
+          "key": "s_box",
+          "type": "section",
+          "label": "A boxed section",
+          "style": "box",
+          "help": "Fields side by side, by width.",
+          "fields": [
+            {
+              "key": "f_first",
+              "type": "text",
+              "label": "Half width",
+              "width": 6
+            },
+            {
+              "key": "f_second",
+              "type": "text",
+              "label": "Half width",
+              "width": 6
+            }
+          ]
+        },
+        {
+          "key": "s_more",
+          "type": "section",
+          "label": "A section that opens and closes",
+          "collapsible": true,
+          "collapsed": true,
+          "fields": [
+            {
+              "key": "f_inside",
+              "type": "text",
+              "label": "Hidden until opened"
+            }
+          ]
+        },
+        {
+          "key": "f_rows",
+          "type": "repeater",
+          "label": "Repeating group",
+          "row_label": "Row",
+          "add_label": "Add a row",
+          "max": 5,
+          "fields": [
+            {
+              "key": "x_item",
+              "type": "text",
+              "label": "Item",
+              "width": 8
+            },
+            {
+              "key": "x_qty",
+              "type": "number",
+              "label": "Qty",
+              "width": 4,
+              "rules": {
+                "min": 0
+              }
+            }
+          ]
+        },
+        {
+          "key": "c_total",
+          "type": "calc",
+          "label": "Calculation: total quantity",
+          "formula": "sum({f_rows.x_qty})",
+          "decimals": 0
+        },
+        {
+          "key": "f_show",
+          "type": "radios",
+          "label": "Show a hidden field?",
+          "inline": true,
+          "options": {
+            "static": [
+              "Yes",
+              "No"
+            ]
+          }
+        },
+        {
+          "key": "f_shown",
+          "type": "text",
+          "label": "Shown because you said yes",
+          "show_if": {
+            "field": "f_show",
+            "op": "eq",
+            "value": "Yes"
+          }
+        },
+        {
+          "key": "d_1",
+          "type": "divider"
+        },
+        {
+          "key": "f_file",
+          "type": "upload",
+          "label": "File upload (PDF or image)",
+          "accept": [
+            "pdf",
+            "png",
+            "jpg"
+          ],
+          "max_files": 2
+        },
+        {
+          "key": "f_signature",
+          "type": "signature",
+          "label": "Signature (draw or type)",
+          "statement": "Just trying it out."
+        },
+        {
+          "key": "f_agree",
+          "type": "consent",
+          "label": "Consent",
+          "terms": "<p>Terms go in a box people can scroll and read with the keyboard.</p>",
+          "rules": {
+            "required": false
+          }
+        }
+      ],
+      "events": {
+        "load": [],
+        "submit": [
+          {
+            "key": "a_save",
+            "type": "save_data",
+            "config": {
+              "target": "submissions"
+            }
+          },
+          {
+            "key": "a_msg",
+            "type": "message",
+            "when": {
+              "action": "a_save",
+              "is": "success"
+            },
+            "config": {
+              "text": "<p>Sent. Every one of those answers is in the viewer now.</p>",
+              "style": "success"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "viewer": {
+    "columns": [
+      "uid",
+      "f_text",
+      "f_select",
+      "f_rating",
+      "f_slider",
+      "created"
+    ],
+    "filters": [
+      "f_select",
+      "f_radios",
+      "created"
+    ],
+    "sort": "created desc",
+    "per_page": 20
+  }
+}

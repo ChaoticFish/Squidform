@@ -1,0 +1,178 @@
+{
+  "schema": 1,
+  "settings": {
+    "submit_label": "Place order",
+    "review": true,
+    "review_title": "Check your order",
+    "copy_pdf": true
+  },
+  "pages": [
+    {
+      "key": "p_order",
+      "title": "Your order",
+      "fields": [
+        {
+          "key": "f_name",
+          "type": "text",
+          "label": "Your name",
+          "prefill": "{user:name}",
+          "autocomplete": "name",
+          "rules": {
+            "required": true
+          }
+        },
+        {
+          "key": "f_email",
+          "type": "email",
+          "label": "Your email",
+          "prefill": "{user:email}",
+          "autocomplete": "email",
+          "rules": {
+            "required": true
+          }
+        },
+        {
+          "key": "s_items",
+          "type": "section",
+          "label": "Items",
+          "style": "box",
+          "fields": [
+            {
+              "key": "f_items",
+              "type": "repeater",
+              "label": "Items",
+              "row_label": "Item",
+              "add_label": "Add an item",
+              "min": 1,
+              "max": 20,
+              "fields": [
+                {
+                  "key": "x_item",
+                  "type": "text",
+                  "label": "Item",
+                  "width": 6,
+                  "rules": {
+                    "required": true
+                  }
+                },
+                {
+                  "key": "x_qty",
+                  "type": "number",
+                  "label": "Qty",
+                  "width": 2,
+                  "default": "1",
+                  "rules": {
+                    "required": true,
+                    "min": 1,
+                    "max": 999
+                  }
+                },
+                {
+                  "key": "x_each",
+                  "type": "number",
+                  "label": "Price each",
+                  "width": 2,
+                  "rules": {
+                    "required": true,
+                    "min": 0
+                  }
+                },
+                {
+                  "key": "c_line",
+                  "type": "calc",
+                  "label": "Line",
+                  "width": 2,
+                  "formula": "{x_qty} * {x_each}",
+                  "decimals": 2
+                }
+              ]
+            },
+            {
+              "key": "c_sub",
+              "type": "calc",
+              "label": "Subtotal",
+              "width": 4,
+              "formula": "sum({f_items.x_qty} * {f_items.x_each})",
+              "decimals": 2,
+              "prefix": "$",
+              "thousands": true
+            },
+            {
+              "key": "f_ship",
+              "type": "radios",
+              "label": "Delivery",
+              "width": 4,
+              "options": {
+                "static": [
+                  {
+                    "value": "pickup",
+                    "label": "Pick up (free)"
+                  },
+                  {
+                    "value": "post",
+                    "label": "Post ($8)"
+                  }
+                ]
+              },
+              "default": "pickup"
+            },
+            {
+              "key": "c_total",
+              "type": "calc",
+              "label": "Total",
+              "width": 4,
+              "formula": "{c_sub} + if({f_ship} = \"post\", 8, 0)",
+              "decimals": 2,
+              "prefix": "$",
+              "thousands": true
+            }
+          ]
+        },
+        {
+          "key": "f_notes",
+          "type": "textarea",
+          "label": "Notes for us",
+          "rows": 3
+        }
+      ],
+      "events": {
+        "load": [],
+        "submit": [
+          {
+            "key": "a_save",
+            "type": "save_data",
+            "config": {
+              "target": "submissions"
+            }
+          },
+          {
+            "key": "a_confirm",
+            "type": "confirm_email",
+            "when": {
+              "action": "a_save",
+              "is": "success"
+            },
+            "config": {
+              "to_field": "f_email",
+              "subject": "Your order {submission:ref}",
+              "attach_pdf": true,
+              "body": "<p>Thanks, {data:f_name}. Your total is {data:c_total}. Your order is attached.</p>"
+            }
+          },
+          {
+            "key": "a_msg",
+            "type": "message",
+            "when": {
+              "action": "a_save",
+              "is": "success"
+            },
+            "config": {
+              "text": "<p>Order {submission:ref} is in. Total: {data:c_total}.</p>",
+              "style": "success"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

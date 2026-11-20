@@ -1,0 +1,5 @@
+[
+    { "value": "hq", "label": "Headquarters" },
+    { "value": "north", "label": "North Campus" },
+    { "value": "lab", "label": "Field Lab" }
+]

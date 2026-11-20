@@ -1,0 +1,262 @@
+{
+  "schema": 1,
+  "settings": {
+    "submit_label": "Send feedback",
+    "show_title": true,
+    "review": true,
+    "captcha": "pow",
+    "intro": "<p>Three short pages. Tell us how we did.</p>"
+  },
+  "pages": [
+    {
+      "key": "p_overall",
+      "title": "Overall",
+      "fields": [
+        {
+          "key": "f_overall",
+          "type": "rating",
+          "label": "How was your visit overall?",
+          "max": 5,
+          "low_label": "Poor",
+          "high_label": "Excellent",
+          "rules": {
+            "required": true
+          }
+        },
+        {
+          "key": "f_parts",
+          "type": "grid",
+          "label": "How did we do on each of these?",
+          "rows": [
+            {
+              "value": "welcome",
+              "label": "Welcome"
+            },
+            {
+              "value": "info",
+              "label": "Information"
+            },
+            {
+              "value": "wait",
+              "label": "Waiting time"
+            },
+            {
+              "value": "value",
+              "label": "Value for money"
+            }
+          ],
+          "columns": [
+            {
+              "value": "poor",
+              "label": "Poor"
+            },
+            {
+              "value": "ok",
+              "label": "OK"
+            },
+            {
+              "value": "good",
+              "label": "Good"
+            },
+            {
+              "value": "great",
+              "label": "Great"
+            }
+          ],
+          "cell": "radio",
+          "rules": {
+            "required": true
+          }
+        },
+        {
+          "key": "f_recommend",
+          "type": "slider",
+          "label": "How likely are you to recommend us?",
+          "min": 0,
+          "max": 10,
+          "step": 1,
+          "default": 5,
+          "low_label": "Not at all",
+          "high_label": "Certainly"
+        }
+      ],
+      "events": {
+        "load": [],
+        "submit": []
+      }
+    },
+    {
+      "key": "p_wrong",
+      "title": "What went wrong",
+      "show_if": {
+        "field": "f_overall",
+        "op": "lte",
+        "value": 2
+      },
+      "fields": [
+        {
+          "key": "h_sorry",
+          "type": "html",
+          "tag": "p",
+          "content": "Sorry it wasn't better. This page only shows when the overall score is 1 or 2."
+        },
+        {
+          "key": "f_problems",
+          "type": "checkboxes",
+          "label": "What went wrong?",
+          "rules": {
+            "min_selected": 1
+          },
+          "options": {
+            "static": [
+              "Hard to find",
+              "Long wait",
+              "Unhelpful staff",
+              "Too expensive",
+              "Something else"
+            ]
+          }
+        },
+        {
+          "key": "f_problem_other",
+          "type": "text",
+          "label": "Something else",
+          "show_if": {
+            "field": "f_problems",
+            "op": "contains",
+            "value": "Something else"
+          },
+          "rules": {
+            "required": true
+          }
+        }
+      ],
+      "events": {
+        "load": [],
+        "submit": []
+      }
+    },
+    {
+      "key": "p_more",
+      "title": "Anything else",
+      "fields": [
+        {
+          "key": "f_priorities",
+          "type": "ranking",
+          "label": "Put these in order of how much they matter to you",
+          "items": [
+            {
+              "value": "price",
+              "label": "Price"
+            },
+            {
+              "value": "speed",
+              "label": "Speed"
+            },
+            {
+              "value": "friendly",
+              "label": "Friendly staff"
+            },
+            {
+              "value": "location",
+              "label": "Location"
+            }
+          ]
+        },
+        {
+          "key": "f_photo",
+          "type": "imagechoice",
+          "label": "Which photo should go on our next poster?",
+          "help": "Pictures from Joomla's own images folder.",
+          "choices": [
+            {
+              "value": "flower",
+              "label": "Blue flower",
+              "image": "images/headers/blue-flower.jpg",
+              "alt": ""
+            },
+            {
+              "value": "maple",
+              "label": "Maple leaves",
+              "image": "images/headers/maple.jpg",
+              "alt": ""
+            },
+            {
+              "value": "rain",
+              "label": "Raindrops",
+              "image": "images/headers/raindrops.jpg",
+              "alt": ""
+            }
+          ]
+        },
+        {
+          "key": "f_comments",
+          "type": "editor",
+          "label": "Anything else you'd like to say?",
+          "rows": 6,
+          "rules": {
+            "max_length": 2000
+          }
+        },
+        {
+          "key": "f_contact_ok",
+          "type": "checkbox",
+          "label": "You may contact me about this feedback"
+        },
+        {
+          "key": "f_email",
+          "type": "email",
+          "label": "Your email",
+          "autocomplete": "email",
+          "show_if": {
+            "field": "f_contact_ok",
+            "op": "eq",
+            "value": "1"
+          },
+          "rules": {
+            "required": true
+          }
+        }
+      ],
+      "events": {
+        "load": [],
+        "submit": [
+          {
+            "key": "a_save",
+            "type": "save_data",
+            "config": {
+              "target": "submissions"
+            }
+          },
+          {
+            "key": "a_msg",
+            "type": "message",
+            "when": {
+              "action": "a_save",
+              "is": "success"
+            },
+            "config": {
+              "text": "<p>Thank you. Every answer is read.</p>",
+              "style": "success"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "viewer": {
+    "columns": [
+      "uid",
+      "f_overall",
+      "f_recommend",
+      "f_contact_ok",
+      "created"
+    ],
+    "filters": [
+      "f_contact_ok",
+      "created"
+    ],
+    "sort": "created desc",
+    "per_page": 20
+  }
+}

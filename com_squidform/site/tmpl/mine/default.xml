@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+	<layout title="COM_SQUIDFORM_MENU_MINE_TITLE">
+		<message>COM_SQUIDFORM_MENU_MINE_DESC</message>
+	</layout>
+	<!-- index.php?option=com_squidform&view=mine -->
+	<fields name="params">
+		<fieldset name="mine" label="COM_SQUIDFORM_MENU_MINE_FIELDSET" addfieldprefix="SquidForm\Component\SquidForm\Administrator\Field">
+			<field name="forms" type="squidforms" multiple="true" layout="joomla.form.field.list-fancy-select" label="COM_SQUIDFORM_MENU_MINE_FORMS" description="COM_SQUIDFORM_MENU_MINE_FORMS_DESC" filter="array" />
+			<field name="show_saved" type="radio" label="COM_SQUIDFORM_MENU_MINE_SHOW_SAVED" layout="joomla.form.field.radio.switcher" default="1" filter="integer">
+				<option value="0">JHIDE</option>
+				<option value="1">JSHOW</option>
+			</field>
+			<field name="status" type="list" label="COM_SQUIDFORM_MENU_MINE_STATUS" description="COM_SQUIDFORM_MENU_MINE_STATUS_DESC" default="">
+				<option value="">COM_SQUIDFORM_MINE_ALL</option>
+				<option value="saved">COM_SQUIDFORM_MINE_SAVED</option>
+				<option value="pending">COM_SQUIDFORM_STATUS_PENDING</option>
+				<option value="returned">COM_SQUIDFORM_STATUS_RETURNED</option>
+				<option value="approved">COM_SQUIDFORM_STATUS_APPROVED</option>
+				<option value="rejected">COM_SQUIDFORM_STATUS_REJECTED</option>
+				<option value="submitted">COM_SQUIDFORM_STATUS_SUBMITTED</option>
+				<option value="withdrawn">COM_SQUIDFORM_STATUS_WITHDRAWN</option>
+			</field>
+			<field name="per_page" type="number" label="COM_SQUIDFORM_MENU_PER_PAGE" min="5" max="100" filter="integer" default="20" />
+		</fieldset>
+	</fields>
+</metadata>

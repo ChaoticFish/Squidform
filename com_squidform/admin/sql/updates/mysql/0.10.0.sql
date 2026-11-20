@@ -1,0 +1,4 @@
+--
+-- SquidForm 0.10.0: no schema changes. Calculations store in the
+-- per-form tables (columns added when a form using them is saved).
+--

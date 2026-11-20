@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension type="module" client="site" method="upgrade">
+	<name>mod_squidform_viewer</name>
+	<author>SquidForm Team</author>
+	<creationDate>2026-11-16</creationDate>
+	<copyright>(C) 2026 SquidForm</copyright>
+	<license>GNU General Public License version 2 or later</license>
+	<version>1.0.3</version>
+	<description>MOD_SQUIDFORM_VIEWER_XML_DESCRIPTION</description>
+	<namespace path="src">SquidForm\Module\SquidFormViewer</namespace>
+	<files>
+		<folder module="mod_squidform_viewer">services</folder>
+		<folder>src</folder>
+		<folder>tmpl</folder>
+	</files>
+	<languages>
+		<language tag="en-GB">language/en-GB/mod_squidform_viewer.ini</language>
+		<language tag="en-GB">language/en-GB/mod_squidform_viewer.sys.ini</language>
+	</languages>
+	<config>
+		<fields name="params">
+			<fieldset name="basic" addfieldprefix="SquidForm\Component\SquidForm\Administrator\Field">
+				<field name="viewer_item" type="squidformvieweritems" label="MOD_SQUIDFORM_VIEWER_FIELD_ITEM" description="MOD_SQUIDFORM_VIEWER_FIELD_ITEM_DESC" required="true" filter="integer">
+					<option value="">MOD_SQUIDFORM_VIEWER_SELECT_ITEM</option>
+				</field>
+				<field name="viewer_note" type="note" label="" description="MOD_SQUIDFORM_VIEWER_NOTE" class="alert alert-info" />
+				<field name="columns" type="squidformcolumnlist" filter="raw" label="COM_SQUIDFORM_MENU_COLUMNS" description="MOD_SQUIDFORM_VIEWER_COLUMNS_DESC" />
+				<field name="filters" type="squidformcolumns" mode="filters" multiple="true" label="COM_SQUIDFORM_MENU_FILTERS" description="MOD_SQUIDFORM_VIEWER_FILTERS_DESC" />
+				<field name="sort" type="squidformsort" label="COM_SQUIDFORM_MENU_SORT" description="COM_SQUIDFORM_MENU_SORT_DESC">
+					<option value="">MOD_SQUIDFORM_VIEWER_USE_ITEM</option>
+				</field>
+				<field name="sort_dir" type="list" label="COM_SQUIDFORM_MENU_SORT_DIR" default="">
+					<option value="">MOD_SQUIDFORM_VIEWER_USE_ITEM</option>
+					<option value="desc">COM_SQUIDFORM_MENU_SORT_DESC_OPT</option>
+					<option value="asc">COM_SQUIDFORM_MENU_SORT_ASC_OPT</option>
+				</field>
+				<field name="per_page" type="number" label="COM_SQUIDFORM_MENU_PER_PAGE" description="MOD_SQUIDFORM_VIEWER_PER_PAGE_DESC" min="0" max="100" filter="integer" default="" />
+				<field name="show_search" type="list" label="COM_SQUIDFORM_MENU_SHOW_SEARCH" default="" filter="string">
+					<option value="">MOD_SQUIDFORM_VIEWER_USE_ITEM</option>
+					<option value="1">JSHOW</option>
+					<option value="0">JHIDE</option>
+				</field>
+			</fieldset>
+			<fieldset name="advanced">
+				<field name="layout" type="modulelayout" label="JFIELD_ALT_LAYOUT_LABEL" class="form-select" validate="moduleLayout" />
+				<field name="moduleclass_sfx" type="textarea" label="COM_MODULES_FIELD_MODULECLASS_SFX_LABEL" rows="3" validate="CssIdentifier" />
+				<!-- Lists are per person (permissions, filters), so module caching is always off. -->
+				<field name="cache" type="hidden" default="0" filter="integer" />
+			</fieldset>
+		</fields>
+	</config>
+</extension>

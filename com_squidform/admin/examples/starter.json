@@ -1,0 +1,215 @@
+{
+  "schema": 1,
+  "settings": {
+    "submit_label": "Send request",
+    "success_message": "Thanks. Your visitor request has been sent.",
+    "admin_email": "change-me@example.test",
+    "debug": false
+  },
+  "pages": [
+    {
+      "key": "p_requester",
+      "title": "About you",
+      "fields": [
+        {
+          "key": "f_intro",
+          "type": "html",
+          "tag": "p",
+          "content": "Use this form to request access for visitors. Fields marked * are required."
+        },
+        {
+          "key": "f_name",
+          "type": "text",
+          "label": "Your name",
+          "prefill": "{user:name}",
+          "autocomplete": "name",
+          "rules": {
+            "required": true,
+            "max_length": 120
+          }
+        },
+        {
+          "key": "f_email",
+          "type": "email",
+          "label": "Your email",
+          "prefill": "{user:email}",
+          "rules": {
+            "required": true
+          }
+        },
+        {
+          "key": "f_site",
+          "type": "select",
+          "label": "Site",
+          "options": {
+            "file": {
+              "path": "sites.json"
+            }
+          },
+          "rules": {
+            "required": true
+          }
+        },
+        {
+          "key": "f_building",
+          "type": "select",
+          "label": "Building",
+          "help": "The list depends on the site you chose.",
+          "options": {
+            "file": {
+              "path": "buildings.csv",
+              "filter_by": {
+                "field": "f_site",
+                "key": "site"
+              }
+            }
+          },
+          "rules": {
+            "required": true
+          }
+        }
+      ],
+      "events": {
+        "load": [],
+        "submit": []
+      }
+    },
+    {
+      "key": "p_visit",
+      "title": "The visit",
+      "fields": [
+        {
+          "key": "f_date",
+          "type": "date",
+          "label": "Visit date",
+          "rules": {
+            "required": true,
+            "min": "2026-01-01"
+          }
+        },
+        {
+          "key": "f_kind",
+          "type": "radios",
+          "label": "Visit type",
+          "options": {
+            "static": [
+              "Escorted",
+              "Unescorted"
+            ]
+          },
+          "rules": {
+            "required": true
+          }
+        },
+        {
+          "key": "f_reason",
+          "type": "textarea",
+          "label": "Reason for unescorted access",
+          "show_if": {
+            "field": "f_kind",
+            "op": "eq",
+            "value": "Unescorted"
+          },
+          "rules": {
+            "required": true,
+            "min_length": 10,
+            "max_length": 2000
+          }
+        },
+        {
+          "key": "f_visitors",
+          "type": "repeater",
+          "label": "Visitors",
+          "row_label": "Visitor",
+          "add_label": "Add another visitor",
+          "min": 1,
+          "max": 10,
+          "fields": [
+            {
+              "key": "f_vname",
+              "type": "text",
+              "label": "Full name",
+              "rules": {
+                "required": true
+              }
+            },
+            {
+              "key": "f_vorg",
+              "type": "text",
+              "label": "Organization"
+            },
+            {
+              "key": "f_citizen",
+              "type": "select",
+              "label": "Citizenship",
+              "options": {
+                "static": [
+                  "US",
+                  "Non-US"
+                ]
+              },
+              "rules": {
+                "required": true
+              }
+            },
+            {
+              "key": "f_country",
+              "type": "text",
+              "label": "Country of citizenship",
+              "show_if": {
+                "field": "f_citizen",
+                "op": "eq",
+                "value": "Non-US"
+              },
+              "rules": {
+                "required": true
+              }
+            }
+          ]
+        },
+        {
+          "key": "f_ack",
+          "type": "checkbox",
+          "label": "I will escort or sponsor these visitors for the whole visit.",
+          "rules": {
+            "required": true
+          }
+        }
+      ],
+      "events": {
+        "load": [],
+        "submit": [
+          {
+            "key": "a_save",
+            "type": "save_data",
+            "config": {
+              "target": "submissions"
+            }
+          },
+          {
+            "key": "a_notify",
+            "type": "email",
+            "when": {
+              "action": "a_save",
+              "is": "success"
+            },
+            "config": {
+              "to": "{setting:admin_email}",
+              "reply_to": "{data:f_email}",
+              "subject": "Visitor request #{submission:id} from {data:f_name}",
+              "body": "<p>A new visitor request was submitted.</p>{data:_all}"
+            }
+          },
+          {
+            "key": "a_thanks",
+            "type": "message",
+            "config": {
+              "text": "Thanks, {data:f_name}. Request #{submission:id} has been sent.",
+              "style": "success"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

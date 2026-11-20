@@ -1,0 +1,315 @@
+{
+ "schema": 1,
+ "settings": {
+  "submit_label": "Join",
+  "show_title": true,
+  "save_later": true,
+  "save_later_guests": true,
+  "review": true,
+  "captcha": "pow",
+  "max_per_user": 1,
+  "user_message": "<p>You've already applied. We'll be in touch.</p>",
+  "intro": "<p>Four pages. You can save and finish later at any point.</p>"
+ },
+ "pages": [
+  {
+   "key": "p_you",
+   "title": "About you",
+   "fields": [
+    {
+     "key": "f_name",
+     "type": "name",
+     "label": "Your name",
+     "parts": [
+      "title",
+      "first",
+      "middle",
+      "last"
+     ],
+     "rules": {
+      "required": true
+     }
+    },
+    {
+     "key": "f_born",
+     "type": "date",
+     "label": "Date of birth",
+     "width": 6,
+     "autocomplete": "bday",
+     "rules": {
+      "required": true,
+      "min": "1900-01-01",
+      "max": "2010-12-31"
+     }
+    },
+    {
+     "key": "f_age",
+     "type": "calc",
+     "label": "Age",
+     "width": 6,
+     "formula": "age({f_born}, today())"
+    },
+    {
+     "key": "f_old_number",
+     "type": "text",
+     "label": "Old member number (if you had one)",
+     "mask": "aa-9999",
+     "placeholder": "AB-1234",
+     "help": "Two letters and four digits."
+    }
+   ],
+   "events": {
+    "load": [],
+    "submit": []
+   }
+  },
+  {
+   "key": "p_contact",
+   "title": "Contact details",
+   "fields": [
+    {
+     "key": "f_address",
+     "type": "address",
+     "label": "Home address",
+     "format": "us",
+     "rules": {
+      "required": true
+     }
+    },
+    {
+     "key": "f_email",
+     "type": "email",
+     "label": "Email",
+     "confirm": true,
+     "autocomplete": "email",
+     "rules": {
+      "required": true
+     }
+    },
+    {
+     "key": "f_mobile",
+     "type": "phone",
+     "label": "Mobile",
+     "default_country": "US",
+     "width": 6
+    },
+    {
+     "key": "f_home",
+     "type": "tel",
+     "label": "Home phone",
+     "mask": "(999) 999-9999",
+     "width": 6,
+     "autocomplete": "tel"
+    },
+    {
+     "key": "f_site",
+     "type": "url",
+     "label": "Your website, if you have one",
+     "placeholder": "https://"
+    }
+   ],
+   "events": {
+    "load": [],
+    "submit": []
+   }
+  },
+  {
+   "key": "p_interests",
+   "title": "Interests",
+   "fields": [
+    {
+     "key": "f_level",
+     "type": "select",
+     "label": "Membership",
+     "empty_label": "- Choose a level -",
+     "rules": {
+      "required": true
+     },
+     "options": {
+      "static": [
+       {
+        "value": "basic",
+        "label": "Basic"
+       },
+       {
+        "value": "family",
+        "label": "Family"
+       },
+       {
+        "value": "patron",
+        "label": "Patron"
+       }
+      ]
+     }
+    },
+    {
+     "key": "h_level",
+     "type": "html",
+     "tag": "div",
+     "parts_by": "f_level",
+     "content": "<div data-show-when=\"basic\"><p>Basic: newsletter and open days.</p></div><div data-show-when=\"family\"><p>Family: up to two adults and their children.</p></div><div data-show-when=\"patron\"><p>Patron: everything, plus our thanks on the website.</p></div>"
+    },
+    {
+     "key": "f_family",
+     "type": "repeater",
+     "label": "Family members",
+     "row_label": "Person",
+     "add_label": "Add a person",
+     "min": 1,
+     "max": 8,
+     "show_if": {
+      "field": "f_level",
+      "op": "eq",
+      "value": "family"
+     },
+     "fields": [
+      {
+       "key": "x_name",
+       "type": "text",
+       "label": "Name",
+       "width": 8,
+       "rules": {
+        "required": true
+       }
+      },
+      {
+       "key": "x_child",
+       "type": "checkbox",
+       "label": "Under 18",
+       "width": 4
+      }
+     ]
+    },
+    {
+     "key": "f_interests",
+     "type": "multiselect",
+     "label": "What interests you?",
+     "help": "Hold Ctrl (or ⌘) to pick several.",
+     "options": {
+      "static": [
+       "Animal care",
+       "Gardening",
+       "Events",
+       "Fundraising",
+       "Education",
+       "Photography"
+      ]
+     }
+    },
+    {
+     "key": "f_heard",
+     "type": "lookup",
+     "label": "How did you hear about us?",
+     "min_chars": 1,
+     "allow_other": true,
+     "options": {
+      "static": [
+       "A friend",
+       "Facebook",
+       "Instagram",
+       "Local paper",
+       "Radio",
+       "Search engine",
+       "An event",
+       "Our newsletter"
+      ]
+     }
+    },
+    {
+     "key": "f_orientation",
+     "type": "datetime",
+     "label": "Pick an orientation session",
+     "help": "Weekday mornings in 2027.",
+     "rules": {
+      "min": "2027-01-04T09:00",
+      "max": "2027-12-17T12:00"
+     }
+    }
+   ],
+   "events": {
+    "load": [],
+    "submit": []
+   }
+  },
+  {
+   "key": "p_finish",
+   "title": "Last step",
+   "fields": [
+    {
+     "key": "s_extra",
+     "type": "section",
+     "label": "Optional extras",
+     "style": "box",
+     "collapsible": true,
+     "collapsed": true,
+     "fields": [
+      {
+       "key": "f_skills",
+       "type": "textarea",
+       "label": "Skills you could share",
+       "rows": 3
+      },
+      {
+       "key": "f_news",
+       "type": "checkbox",
+       "label": "Send me the newsletter"
+      }
+     ]
+    },
+    {
+     "key": "d_1",
+     "type": "divider",
+     "space": "small"
+    },
+    {
+     "key": "f_rules",
+     "type": "consent",
+     "label": "Membership rules",
+     "terms": "<p>Replace this with your membership rules. Members agree to treat people and animals kindly, and to follow the site's safety rules.</p>",
+     "rules": {
+      "required": true
+     }
+    }
+   ],
+   "events": {
+    "load": [],
+    "submit": [
+     {
+      "key": "a_save",
+      "type": "save_data",
+      "config": {
+       "target": "submissions"
+      }
+     },
+     {
+      "key": "a_msg",
+      "type": "message",
+      "when": {
+       "action": "a_save",
+       "is": "success"
+      },
+      "config": {
+       "text": "<p>Welcome aboard! We'll confirm your membership soon.</p>",
+       "style": "success"
+      }
+     }
+    ]
+   }
+  }
+ ],
+ "viewer": {
+  "columns": [
+   "uid",
+   "f_name",
+   "f_level",
+   "f_email",
+   "created"
+  ],
+  "filters": [
+   "f_level",
+   "created"
+  ],
+  "sort": "created desc",
+  "per_page": 20
+ }
+}

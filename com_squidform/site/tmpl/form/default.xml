@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+	<layout title="COM_SQUIDFORM_MENU_FORM_TITLE">
+		<message>COM_SQUIDFORM_MENU_FORM_DESC</message>
+	</layout>
+	<!-- "request" fields become part of the menu link: index.php?option=com_squidform&view=form&form=ALIAS -->
+	<fields name="request">
+		<fieldset name="request" addfieldprefix="SquidForm\Component\SquidForm\Administrator\Field">
+			<field name="form" type="squidforms" valuefield="alias" label="COM_SQUIDFORM_MENU_FIELD_FORM" required="true">
+				<option value="">COM_SQUIDFORM_SELECT_FORM</option>
+			</field>
+		</fieldset>
+	</fields>
+</metadata>

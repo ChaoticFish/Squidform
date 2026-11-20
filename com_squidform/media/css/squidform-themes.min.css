@@ -1,0 +1,80 @@
+.squidform.sf-theme-elegant{--sf-a:#2f4b6e;--sf-a-hover:#22384f;--sf-a-ink:#fff;--sf-btn-r:2px;--sf-bw:1px;--sf-field:transparent;--sf-focus:rgba(47,75,110,.45);--sf-head:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;--sf-ink:inherit;--sf-line:#767676;--sf-muted:#5f6670;--sf-r:2px;--sf-req:#8c2f1b;--sf-tint:rgba(47,75,110,.08)}
+.squidform.sf-theme-chaotic{--sf-a:#f77605;--sf-a-hover:#ff8a1f;--sf-a-ink:#1f1f1c;--sf-btn-r:6px 10px 5px 9px;--sf-bw:2px;--sf-field:#fff;--sf-focus:#05b5c3;--sf-hand:Caveat,"Segoe Print","Bradley Hand","Chalkboard SE","Comic Sans MS",cursive;--sf-head:var(--sf-hand);--sf-ink:#1f1f1c;--sf-line:#1f1f1c;--sf-muted:#5a5247;--sf-paper:#f8f0ea;--sf-purple:#721a82;--sf-r:6px;--sf-req:#721a82;--sf-shadow:#721a82;--sf-tint:rgba(247,118,5,.12)}
+.squidform.sf-theme-civic{--sf-a:#005ea2;--sf-a-hover:#1a4480;--sf-a-ink:#fff;--sf-btn-r:4px;--sf-bw:2px;--sf-field:#fff;--sf-focus:#2491ff;--sf-head:inherit;--sf-ink:#1b1b1b;--sf-line:#1b1b1b;--sf-muted:#565c65;--sf-r:0;--sf-req:#b50909;--sf-tint:#e7f2f8}
+.squidform.sf-theme-friendly{--sf-a:#0e7c86;--sf-a-hover:#0a5f66;--sf-a-ink:#fff;--sf-btn-r:999px;--sf-bw:1.5px;--sf-field:rgba(14,124,134,.06);--sf-focus:rgba(14,124,134,.5);--sf-head:inherit;--sf-ink:inherit;--sf-line:#7a8791;--sf-muted:#566069;--sf-r:12px;--sf-req:#b3261e;--sf-tint:rgba(14,124,134,.1)}
+[data-bs-theme=dark] .squidform.sf-theme-elegant{--sf-a:#a9c3e3;--sf-a-hover:#c3d6ee;--sf-a-ink:#111a24;--sf-focus:rgba(169,195,227,.55);--sf-line:#8b929b;--sf-muted:#b4bac2;--sf-req:#f0a58f;--sf-tint:rgba(169,195,227,.1)}
+[data-bs-theme=dark] .squidform.sf-theme-chaotic{--sf-a-hover:#ff9c40;--sf-field:#1f1f1c;--sf-ink:#f8f0ea;--sf-line:#f8f0ea;--sf-muted:#d8cfc6;--sf-paper:#2c2c2a;--sf-purple:#e2a6ee;--sf-req:#fcd602;--sf-shadow:#f77605;--sf-tint:rgba(247,118,5,.18)}
+[data-bs-theme=dark] .squidform.sf-theme-civic{--sf-a:#73b3e7;--sf-a-hover:#97d4ea;--sf-a-ink:#1b1b1b;--sf-field:#1b1b1b;--sf-ink:#f0f0f0;--sf-line:#f0f0f0;--sf-muted:#c6cace;--sf-req:#f39268;--sf-tint:rgba(115,179,231,.14)}
+[data-bs-theme=dark] .squidform.sf-theme-friendly{--sf-a:#5fd3dc;--sf-a-hover:#8be2e8;--sf-a-ink:#0b2b2e;--sf-field:rgba(95,211,220,.08);--sf-focus:rgba(95,211,220,.55);--sf-line:#8d9aa3;--sf-muted:#b9c3ca;--sf-req:#f2b8b5;--sf-tint:rgba(95,211,220,.12)}
+.squidform.sf-themed .form-control,.squidform.sf-themed .form-select{background-color:var(--sf-field);border:var(--sf-bw) solid var(--sf-line);border-radius:var(--sf-r);color:var(--sf-ink)}
+.squidform.sf-themed .form-control:focus,.squidform.sf-themed .form-select:focus,.squidform.sf-themed .form-check-input:focus,.squidform.sf-themed .btn:focus-visible{border-color:var(--sf-a);box-shadow:none;outline:3px solid var(--sf-focus);outline-offset:1px}
+.squidform.sf-themed .form-control.is-invalid,.squidform.sf-themed .form-select.is-invalid{border-color:var(--sf-req)}
+.squidform.sf-themed .form-check-input{background-color:var(--sf-field);border:var(--sf-bw) solid var(--sf-line)}
+.squidform.sf-themed .form-check-input:checked{background-color:var(--sf-a);border-color:var(--sf-a)}
+.squidform.sf-themed .btn-primary{background-color:var(--sf-a);border-color:var(--sf-a);border-radius:var(--sf-btn-r);color:var(--sf-a-ink);font-weight:600}
+.squidform.sf-themed .btn-primary:hover,.squidform.sf-themed .btn-primary:active{background-color:var(--sf-a-hover);border-color:var(--sf-a-hover);color:var(--sf-a-ink)}
+.squidform.sf-themed .btn-outline-secondary,.squidform.sf-themed .btn-secondary{background-color:transparent;border:var(--sf-bw) solid var(--sf-line);border-radius:var(--sf-btn-r);color:var(--sf-ink)}
+.squidform.sf-themed .btn-outline-secondary:hover,.squidform.sf-themed .btn-secondary:hover{background-color:var(--sf-tint);color:var(--sf-ink)}
+.squidform.sf-themed .form-text,.squidform.sf-themed .sf-choice-count,.squidform.sf-themed .sf-progress{color:var(--sf-muted)!important}
+.squidform.sf-themed .sf-req{color:var(--sf-req)}
+.squidform.sf-themed .sf-title,.squidform.sf-themed .sf-section-title{font-family:var(--sf-head)}
+.squidform.sf-themed .sf-agree-terms{border-color:var(--sf-line);border-radius:var(--sf-r)}
+.squidform.sf-theme-elegant .sf-title{font-size:2rem;font-weight:400;letter-spacing:.01em;margin-bottom:.75rem}
+.squidform.sf-theme-elegant .sf-section-title{font-family:inherit;font-size:.8rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase}
+.squidform.sf-theme-elegant .sf-section-rule>.sf-section-title{border-bottom-color:var(--sf-line);padding-bottom:.5rem}
+.squidform.sf-theme-elegant .sf-intro{font-family:var(--sf-head);font-size:1.1rem;font-style:italic}
+.squidform.sf-theme-elegant .form-label,.squidform.sf-theme-elegant legend.form-label{font-weight:500}
+.squidform.sf-theme-elegant .form-control,.squidform.sf-theme-elegant .form-select{border-width:0 0 1px;border-radius:0;padding-left:.125rem}
+.squidform.sf-theme-elegant textarea.form-control{border-width:1px;padding-left:.5rem}
+.squidform.sf-theme-elegant .sf-field{margin-bottom:1.5rem!important}
+.squidform.sf-theme-elegant .btn{font-size:.85rem;letter-spacing:.12em;padding:.75rem 1.75rem;text-transform:uppercase}
+.squidform.sf-theme-chaotic{background:var(--sf-paper);border:2px solid var(--sf-line);border-radius:6px 18px 8px 14px;box-shadow:7px 7px 0 var(--sf-shadow);color:var(--sf-ink);isolation:isolate;padding:1.5rem 1.5rem 1.75rem;position:relative}
+.squidform.sf-theme-chaotic::before{background:radial-gradient(circle at 30% 40%,#f77605 0 22px,transparent 23px),radial-gradient(circle at 70% 20%,#fcd602 0 9px,transparent 10px),radial-gradient(circle at 82% 66%,#05b5c3 0 6px,transparent 7px),radial-gradient(circle at 52% 82%,#721a82 0 4px,transparent 5px);content:"";height:90px;opacity:.85;pointer-events:none;position:absolute;right:10px;top:-22px;width:110px;z-index:-1}
+.squidform.sf-theme-chaotic .sf-langs{padding-right:4.5rem}
+.squidform.sf-theme-chaotic .sf-title{color:var(--sf-purple);font-size:2.4rem;font-weight:700;line-height:1.1;transform:rotate(-1.2deg);transform-origin:left}
+.squidform.sf-theme-chaotic .sf-section-title{color:var(--sf-purple);font-size:1.7rem;font-weight:700;position:relative}
+.squidform.sf-theme-chaotic .sf-section-rule>.sf-section-title{border-bottom:0;padding-bottom:.6rem}
+.squidform.sf-theme-chaotic .sf-section-rule>.sf-section-title::after{background:var(--sf-a);bottom:0;content:"";height:10px;left:0;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg' viewBox='0 0 100 10' preserveAspectRatio='none'%3E%3Cpath d='M2 6 Q 14 1 26 6 T 50 6 T 74 6 T 98 6' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E") center/100% 100% no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg' viewBox='0 0 100 10' preserveAspectRatio='none'%3E%3Cpath d='M2 6 Q 14 1 26 6 T 50 6 T 74 6 T 98 6' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E") center/100% 100% no-repeat;position:absolute;width:9rem}
+.squidform.sf-theme-chaotic .sf-intro strong{background:linear-gradient(transparent 58%,rgba(252,214,2,.75) 58%);color:inherit}
+.squidform.sf-theme-chaotic .form-label,.squidform.sf-theme-chaotic legend.form-label{font-weight:700}
+.squidform.sf-theme-chaotic .form-control:focus,.squidform.sf-theme-chaotic .form-select:focus{box-shadow:4px 4px 0 var(--sf-a)}
+.squidform.sf-theme-chaotic .sf-choice-count{color:var(--sf-purple)!important;font-weight:600}
+.squidform.sf-theme-chaotic .btn{border-width:2px;font-weight:700;padding:.6rem 1.4rem}
+.squidform.sf-theme-chaotic .btn-primary{border-color:var(--sf-line);box-shadow:4px 4px 0 var(--sf-line);transform:rotate(-.6deg);transition:box-shadow .12s,transform .12s}
+.squidform.sf-theme-chaotic .btn-primary:hover{border-color:var(--sf-line);box-shadow:6px 6px 0 var(--sf-line);transform:translate(-1px,-1px) rotate(-.6deg)}
+.squidform.sf-theme-chaotic .btn-primary:active{box-shadow:1px 1px 0 var(--sf-line);transform:translate(3px,3px) rotate(-.6deg)}
+.squidform.sf-theme-chaotic .sf-agree-terms{background:var(--sf-field);border-style:dashed}
+.squidform.sf-theme-chaotic a{color:var(--sf-purple)}
+.squidform.sf-theme-civic{color:var(--sf-ink);font-size:1.0625rem}
+.squidform.sf-theme-civic .sf-title{font-size:2rem;font-weight:700}
+.squidform.sf-theme-civic .sf-section-title{font-weight:700}
+.squidform.sf-theme-civic .sf-section-rule>.sf-section-title{border-bottom:4px solid var(--sf-a);padding-bottom:.4rem}
+.squidform.sf-theme-civic .form-label,.squidform.sf-theme-civic legend.form-label{font-weight:700}
+.squidform.sf-theme-civic .form-control,.squidform.sf-theme-civic .form-select{min-height:2.75rem}
+.squidform.sf-theme-civic .form-check-input{height:1.35em;margin-top:.1em;width:1.35em}
+.squidform.sf-theme-civic .form-check-label{padding-left:.25rem}
+.squidform.sf-theme-civic .btn{font-weight:700;padding:.75rem 1.5rem}
+.squidform.sf-theme-civic .sf-agree-terms{background:var(--sf-tint);border-left:6px solid var(--sf-a)}
+.squidform.sf-theme-friendly .sf-title{font-weight:800;letter-spacing:-.01em}
+.squidform.sf-theme-friendly .sf-section{background:var(--sf-tint);border-radius:18px;padding:1rem 1.25rem .5rem}
+.squidform.sf-theme-friendly .sf-section-rule>.sf-section-title{border-bottom:0;font-weight:700;margin-bottom:.5rem}
+.squidform.sf-theme-friendly .form-label,.squidform.sf-theme-friendly legend.form-label{font-weight:600}
+.squidform.sf-theme-friendly .sf-choices .form-check{background:var(--sf-field);border:var(--sf-bw) solid var(--sf-line);border-radius:999px;margin-bottom:.4rem;padding:.35rem .9rem .35rem 2.2rem}
+.squidform.sf-theme-friendly .sf-choices .form-check:has(.form-check-input:checked){background:var(--sf-tint);border-color:var(--sf-a)}
+.squidform.sf-theme-friendly .btn{font-weight:700;padding:.6rem 1.6rem}
+@media (prefers-reduced-motion: reduce) {
+  .squidform.sf-theme-chaotic .btn-primary,
+  .squidform.sf-theme-chaotic .btn-primary:hover,
+  .squidform.sf-theme-chaotic .btn-primary:active {
+    transition: none;
+  }
+}
+@media (max-width: 575.98px) {
+  .squidform.sf-theme-chaotic {
+    box-shadow: 4px 4px 0 var(--sf-shadow);
+    padding: 1.1rem 1rem 1.25rem;
+  }
+  .squidform.sf-theme-chaotic .sf-title {
+    font-size: 2rem;
+  }
+}

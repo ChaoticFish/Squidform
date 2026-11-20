@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+	<fieldset name="details">
+		<field name="id" type="number" label="JGLOBAL_FIELD_ID_LABEL" default="0" readonly="true" class="readonly" />
+		<field name="title" type="text" label="JGLOBAL_TITLE" required="true" maxlength="255" />
+		<field name="alias" type="text" label="JFIELD_ALIAS_LABEL" description="COM_SQUIDFORM_FIELD_ALIAS_DESC" hint="JFIELD_ALIAS_PLACEHOLDER" maxlength="190" />
+		<field name="description" type="textarea" label="JGLOBAL_DESCRIPTION" rows="3" filter="string" />
+	</fieldset>
+
+	<fieldset name="definition">
+		<field name="schema_json" type="textarea" label="COM_SQUIDFORM_FIELD_SCHEMA" description="COM_SQUIDFORM_FIELD_SCHEMA_DESC"
+			rows="30" class="font-monospace sf-schema-editor" filter="raw" required="true" spellcheck="false" />
+		<field name="version_note" type="text" label="COM_SQUIDFORM_FIELD_VERSION_NOTE" description="COM_SQUIDFORM_FIELD_VERSION_NOTE_DESC" maxlength="255" filter="string" />
+	</fieldset>
+
+	<fieldset name="publishing">
+		<field name="state" type="list" label="JSTATUS" default="1" class="form-select-color-state" validate="options">
+			<option value="1">JPUBLISHED</option>
+			<option value="0">JUNPUBLISHED</option>
+		</field>
+		<field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL" filter="UINT" validate="options" />
+		<field name="created" type="calendar" label="JGLOBAL_FIELD_CREATED_LABEL" translateformat="true" showtime="true" readonly="true" filter="user_utc" />
+		<field name="modified" type="calendar" label="JGLOBAL_FIELD_MODIFIED_LABEL" translateformat="true" showtime="true" readonly="true" filter="user_utc" />
+		<field name="asset_id" type="hidden" filter="unset" />
+		<field name="checked_out" type="hidden" filter="unset" />
+		<field name="checked_out_time" type="hidden" filter="unset" />
+	</fieldset>
+	<fieldset name="permissions">
+		<field name="rules" type="rules" label="JFIELD_RULES_LABEL" translate_label="false" filter="rules" validate="rules"
+			component="com_squidform" section="form" />
+	</fieldset>
+</form>

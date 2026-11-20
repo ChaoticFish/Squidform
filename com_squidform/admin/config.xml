@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<inlinehelp button="show"/>
+	<fieldset name="security" label="COM_SQUIDFORM_CONFIG_SECURITY">
+		<field name="honeypot" type="radio" layout="joomla.form.field.radio.switcher" default="1"
+			label="COM_SQUIDFORM_CONFIG_HONEYPOT" description="COM_SQUIDFORM_CONFIG_HONEYPOT_DESC">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		<field name="min_fill_seconds" type="number" default="3" min="0" max="120" filter="integer"
+			label="COM_SQUIDFORM_CONFIG_MIN_FILL" description="COM_SQUIDFORM_CONFIG_MIN_FILL_DESC" />
+		<field name="max_age_hours" type="number" default="8" min="1" max="168" filter="integer"
+			label="COM_SQUIDFORM_CONFIG_MAX_AGE" description="COM_SQUIDFORM_CONFIG_MAX_AGE_DESC" />
+		<field name="allow_input_recipients" type="radio" layout="joomla.form.field.radio.switcher" default="0"
+			label="COM_SQUIDFORM_CONFIG_INPUT_RECIPIENTS" description="COM_SQUIDFORM_CONFIG_INPUT_RECIPIENTS_DESC">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		<field name="allow_confirmation" type="radio" layout="joomla.form.field.radio.switcher" default="1"
+			label="COM_SQUIDFORM_CONFIG_CONFIRMATION" description="COM_SQUIDFORM_CONFIG_CONFIRMATION_DESC">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		<field name="allow_external_redirects" type="radio" layout="joomla.form.field.radio.switcher" default="0"
+			label="COM_SQUIDFORM_CONFIG_EXTERNAL_REDIRECTS" description="COM_SQUIDFORM_CONFIG_EXTERNAL_REDIRECTS_DESC">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		<field name="spacer_rate" type="spacer" label="COM_SQUIDFORM_CONFIG_RATE_HEADING" />
+		<field name="rate_limit_max" type="number" default="5" min="0" max="1000" filter="integer"
+			label="COM_SQUIDFORM_CONFIG_RATE_MAX" description="COM_SQUIDFORM_CONFIG_RATE_MAX_DESC" />
+		<field name="rate_limit_minutes" type="number" default="10" min="1" max="1440" filter="integer"
+			label="COM_SQUIDFORM_CONFIG_RATE_MINUTES" description="COM_SQUIDFORM_CONFIG_RATE_MINUTES_DESC" />
+		<field name="rate_limit_ip" type="radio" layout="joomla.form.field.radio.switcher" default="1"
+			label="COM_SQUIDFORM_CONFIG_RATE_IP" description="COM_SQUIDFORM_CONFIG_RATE_IP_DESC">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		<field name="spacer_proxy" type="spacer" label="COM_SQUIDFORM_CONFIG_PROXY_HEADING" />
+		<field name="trusted_proxies" type="textarea" rows="3" default="" filter="string"
+			label="COM_SQUIDFORM_CONFIG_PROXIES" description="COM_SQUIDFORM_CONFIG_PROXIES_DESC" hint="10.0.0.5&#10;10.20.0.0/24" />
+		<field name="proxy_header" type="list" default="x-forwarded-for"
+			label="COM_SQUIDFORM_CONFIG_PROXY_HEADER" description="COM_SQUIDFORM_CONFIG_PROXY_HEADER_DESC" showon="trusted_proxies!:">
+			<option value="x-forwarded-for">X-Forwarded-For</option>
+			<option value="x-real-ip">X-Real-IP</option>
+		</field>
+		<field name="spacer_captcha" type="spacer" label="COM_SQUIDFORM_CONFIG_CAPTCHA_HEADING" />
+		<field name="pow_max" type="number" default="50000" min="1000" max="1000000" filter="integer"
+			label="COM_SQUIDFORM_CONFIG_POW_MAX" description="COM_SQUIDFORM_CONFIG_POW_MAX_DESC" />
+	</fieldset>
+	<fieldset name="data" label="COM_SQUIDFORM_CONFIG_DATA">
+		<field name="read_tables" type="textarea" rows="6" filter="string"
+			label="COM_SQUIDFORM_CONFIG_READ_TABLES" description="COM_SQUIDFORM_CONFIG_READ_TABLES_DESC" hint="#__mytable" />
+		<field name="write_tables" type="textarea" rows="6" filter="string"
+			label="COM_SQUIDFORM_CONFIG_WRITE_TABLES" description="COM_SQUIDFORM_CONFIG_WRITE_TABLES_DESC" hint="#__sfd_other_form" />
+		<field name="session_keys" type="textarea" rows="3" filter="string" default=""
+			label="COM_SQUIDFORM_CONFIG_SESSION_KEYS" description="COM_SQUIDFORM_CONFIG_SESSION_KEYS_DESC" />
+		<field name="allow_external_writes" type="radio" layout="joomla.form.field.radio.switcher" default="0" filter="integer"
+			label="COM_SQUIDFORM_CONFIG_EXTERNAL_WRITES" description="COM_SQUIDFORM_CONFIG_EXTERNAL_WRITES_DESC">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		<field name="options_folder" type="text" default="images/squidform/options" filter="path"
+			label="COM_SQUIDFORM_CONFIG_OPTIONS_FOLDER" description="COM_SQUIDFORM_CONFIG_OPTIONS_FOLDER_DESC" />
+	</fieldset>
+	<fieldset name="output" label="COM_SQUIDFORM_CONFIG_OUTPUT">
+		<field name="default_look" type="list" default="simple" label="COM_SQUIDFORM_CONFIG_DEFAULT_LOOK" description="COM_SQUIDFORM_CONFIG_DEFAULT_LOOK_DESC">
+			<option value="simple">COM_SQUIDFORM_LOOK_SIMPLE</option>
+			<option value="elegant">COM_SQUIDFORM_LOOK_ELEGANT</option>
+			<option value="chaotic">COM_SQUIDFORM_LOOK_CHAOTIC</option>
+			<option value="civic">COM_SQUIDFORM_LOOK_CIVIC</option>
+			<option value="friendly">COM_SQUIDFORM_LOOK_FRIENDLY</option>
+		</field>
+		<field name="languages" type="checkboxes" multiple="true" default="en-GB,es-ES,fr-FR,de-DE,eo-XX,en-XC,en-XF,en-XD"
+			label="COM_SQUIDFORM_CONFIG_LANGUAGES" description="COM_SQUIDFORM_CONFIG_LANGUAGES_DESC">
+			<option value="en-GB">COM_SQUIDFORM_LANG_EN_GB</option>
+			<option value="es-ES">COM_SQUIDFORM_LANG_ES_ES</option>
+			<option value="fr-FR">COM_SQUIDFORM_LANG_FR_FR</option>
+			<option value="de-DE">COM_SQUIDFORM_LANG_DE_DE</option>
+			<option value="eo-XX">COM_SQUIDFORM_LANG_EO_XX</option>
+			<option value="en-XC">COM_SQUIDFORM_LANG_EN_XC</option>
+			<option value="en-XF">COM_SQUIDFORM_LANG_EN_XF</option>
+			<option value="en-XD">COM_SQUIDFORM_LANG_EN_XD</option>
+		</field>
+		<field name="pdf_paper" type="list" default="letter" label="COM_SQUIDFORM_CONFIG_PDF_PAPER" description="COM_SQUIDFORM_CONFIG_PDF_PAPER_DESC">
+			<option value="letter">COM_SQUIDFORM_CONFIG_PDF_LETTER</option>
+			<option value="a4">COM_SQUIDFORM_CONFIG_PDF_A4</option>
+		</field>
+		<field name="resume_days" type="number" default="30" min="1" max="365" filter="integer"
+			label="COM_SQUIDFORM_CONFIG_RESUME_DAYS" description="COM_SQUIDFORM_CONFIG_RESUME_DAYS_DESC" />
+	</fieldset>
+	<fieldset name="uploads" label="COM_SQUIDFORM_CONFIG_UPLOADS" description="COM_SQUIDFORM_CONFIG_UPLOADS_DESC">
+		<field name="spacer_check" type="spacer" label="COM_SQUIDFORM_CONFIG_CHECK_SERVER" />
+		<field name="upload_folder" type="text" default="squidform-files" filter="string"
+			label="COM_SQUIDFORM_CONFIG_UPLOAD_FOLDER" description="COM_SQUIDFORM_CONFIG_UPLOAD_FOLDER_DESC" />
+		<field name="upload_types" type="textarea" rows="2" default="pdf,jpg,jpeg,png,gif,webp,txt,csv,doc,docx,xls,xlsx,ppt,pptx,odt,ods" filter="string"
+			label="COM_SQUIDFORM_CONFIG_UPLOAD_TYPES" description="COM_SQUIDFORM_CONFIG_UPLOAD_TYPES_DESC" />
+		<field name="upload_max_mb" type="number" default="10" min="1" max="2048" filter="integer"
+			label="COM_SQUIDFORM_CONFIG_UPLOAD_MAX" description="COM_SQUIDFORM_CONFIG_UPLOAD_MAX_DESC" />
+		<field name="upload_random_names" type="radio" layout="joomla.form.field.radio.switcher" default="1" filter="integer"
+			label="COM_SQUIDFORM_CONFIG_UPLOAD_RANDOM" description="COM_SQUIDFORM_CONFIG_UPLOAD_RANDOM_DESC">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		<field name="spacer_scan" type="spacer" label="COM_SQUIDFORM_CONFIG_SCAN_HEADING" />
+		<field name="scan_mode" type="list" default="none" filter="cmd"
+			label="COM_SQUIDFORM_CONFIG_SCAN_MODE" description="COM_SQUIDFORM_CONFIG_SCAN_MODE_DESC">
+			<option value="none">COM_SQUIDFORM_CONFIG_SCAN_NONE</option>
+			<option value="clamd">COM_SQUIDFORM_CONFIG_SCAN_CLAMD</option>
+			<option value="command">COM_SQUIDFORM_CONFIG_SCAN_COMMAND</option>
+		</field>
+		<field name="scan_address" type="text" default="" filter="string" hint="unix:///run/clamav/clamd.ctl" showon="scan_mode:clamd"
+			label="COM_SQUIDFORM_CONFIG_SCAN_ADDRESS" description="COM_SQUIDFORM_CONFIG_SCAN_ADDRESS_DESC" />
+		<field name="scan_command" type="text" default="" filter="path" hint="/usr/bin/clamdscan" showon="scan_mode:command"
+			label="COM_SQUIDFORM_CONFIG_SCAN_PROGRAM" description="COM_SQUIDFORM_CONFIG_SCAN_PROGRAM_DESC" />
+		<field name="scan_fail" type="list" default="reject" filter="cmd" showon="scan_mode!:none"
+			label="COM_SQUIDFORM_CONFIG_SCAN_FAIL" description="COM_SQUIDFORM_CONFIG_SCAN_FAIL_DESC">
+			<option value="reject">COM_SQUIDFORM_CONFIG_SCAN_FAIL_REJECT</option>
+			<option value="accept">COM_SQUIDFORM_CONFIG_SCAN_FAIL_ACCEPT</option>
+		</field>
+	</fieldset>
+	<fieldset name="developers" label="COM_SQUIDFORM_CONFIG_DEVELOPERS">
+		<field name="starters" type="checkboxes" multiple="true" default=""
+			label="COM_SQUIDFORM_CONFIG_STARTERS" description="COM_SQUIDFORM_CONFIG_STARTERS_DESC">
+			<option value="BlockedList">COM_SQUIDFORM_STARTER_BLOCKEDLIST</option>
+			<option value="LookUpPerson">COM_SQUIDFORM_STARTER_LOOKUPPERSON</option>
+			<option value="NextNumber">COM_SQUIDFORM_STARTER_NEXTNUMBER</option>
+			<option value="SessionUser">COM_SQUIDFORM_STARTER_SESSIONUSER</option>
+			<option value="TakeTurns">COM_SQUIDFORM_STARTER_TAKETURNS</option>
+			<option value="TidyText">COM_SQUIDFORM_STARTER_TIDYTEXT</option>
+			<option value="WorkingDays">COM_SQUIDFORM_STARTER_WORKINGDAYS</option>
+			<option value="WriteFile">COM_SQUIDFORM_STARTER_WRITEFILE</option>
+		</field>
+		<field name="writefile_folder" type="text" default="" filter="path"
+			label="COM_SQUIDFORM_CONFIG_WRITEFILE_FOLDER" description="COM_SQUIDFORM_CONFIG_WRITEFILE_FOLDER_DESC" />
+		<field name="handler_folder" type="text" default="administrator/squidform-handlers" filter="path"
+			label="COM_SQUIDFORM_CONFIG_HANDLER_FOLDER" description="COM_SQUIDFORM_CONFIG_HANDLER_FOLDER_DESC" />
+	</fieldset>
+	<fieldset name="permissions" label="JCONFIG_PERMISSIONS_LABEL" description="JCONFIG_PERMISSIONS_DESC">
+		<field name="rules" type="rules" label="JCONFIG_PERMISSIONS_LABEL" filter="rules" validate="rules"
+			component="com_squidform" section="component" />
+	</fieldset>
+</config>

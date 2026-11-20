@@ -1,0 +1,4 @@
+--
+-- SquidForm 0.8.0: no schema changes. New field types store in the
+-- existing per-form data tables (columns are added when a form is saved).
+--
