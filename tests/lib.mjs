@@ -229,8 +229,8 @@ export const text = async (p, sel = 'main, body') => ((await p.locator(sel).firs
 
 /** Latest submission of a form: { id, uid, status, user_id, data } through SquidForm's reader. */
 export function latest(alias, q = {}) {
-  const rows = JSON.parse(sf('eval-api', alias, JSON.stringify({ status: ['draft', 'submitted', 'pending', 'approved', 'rejected', 'returned', 'withdrawn'], archived: null, test: true, order: [['created', 'desc']], limit: 1, ...q })));
-  return rows ? rows[0] : null;
+  const rows = JSON.parse(sf('eval-api', alias, JSON.stringify({ status: ['draft', 'submitted', 'pending', 'approved', 'rejected', 'returned', 'withdrawn'], archived: null, test: true, limit: 1000, ...q })));
+  return rows && rows.length ? rows.reduce((a, b) => (b.id > a.id ? b : a)) : null;
 }
 export function answers(alias, q = {}) { return JSON.parse(sf('eval-api', alias, JSON.stringify(q))) || []; }
 
