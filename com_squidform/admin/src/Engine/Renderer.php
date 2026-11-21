@@ -33,6 +33,12 @@ final class Renderer
     /** @var array<string, true> forms already on this page */
     private static array $rendered = [];
 
+    /**
+     * What the last form rendered was showing (1.0.4), for the page's <title>:
+     * ['form' => form title, 'step' => "Step 2 of 3: Contact details", "Check your answers" or ''].
+     */
+    public static ?array $lastTitle = null;
+
     /** True once any form was rendered in this request (used to exclude the page from the page cache). */
     public static function hasRendered(): bool
     {
@@ -83,6 +89,7 @@ final class Renderer
         }
 
         ['form' => $form, 'schema' => $schema, 'version_id' => $versionId] = $loaded;
+        self::$lastTitle = ['form' => (string) $form['title'], 'step' => '']; // messages and notices: the form's title
 
         // 0.15.0: everything below in the visitor's language (and back after).
         if ($tag === null) {
@@ -224,6 +231,9 @@ final class Renderer
         $count    = \count($shown);
         $at       = (int) array_search($page, $shown, true) + 1;
         $progress = '';
+
+        self::$lastTitle = ['form' => (string) $form['title'], 'step' => $schema->pageCount() > 1
+            ? Text::sprintf('COM_SQUIDFORM_STEP_OF', $at, $count) . (!empty($pageDef['title']) ? ': ' . $pageDef['title'] : '') : ''];
 
         if ($schema->pageCount() > 1) {
             $progress = '<p class="sf-progress text-body-secondary" aria-live="polite">'
@@ -502,6 +512,7 @@ final class Renderer
         $ph     = new Placeholders($schema, $user, $data, [], [], $form);
         $guard  = FormGuard::fields($alias, (int) ($state['guard_t'] ?? 0));
         $title  = trim((string) $schema->setting('review_title', '')) ?: Text::_('COM_SQUIDFORM_REVIEW_TITLE');
+        self::$lastTitle = ['form' => (string) $form['title'], 'step' => $title];
         $intro  = trim((string) $schema->setting('review_intro', '')) ?: Text::_('COM_SQUIDFORM_REVIEW_INTRO');
         $body   = '';
 
