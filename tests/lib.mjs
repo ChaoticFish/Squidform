@@ -242,6 +242,14 @@ export async function fill(p, values) {
 export async function next(p, value = 'next') {
   await Promise.all([p.waitForNavigation({ timeout: 30000 }), p.locator(`button[name="sf_nav"][value="${value}"]`).first().click()]);
 }
+/** Next, posted straight to the server: skips the browser's checks and the form's own script (to test the server's). */
+export async function rawNext(p, value = 'next') {
+  await Promise.all([p.waitForNavigation({ timeout: 30000 }), p.evaluate((v) => {
+    const f = document.querySelector('form[data-sf-alias]');
+    const i = document.createElement('input'); i.type = 'hidden'; i.name = 'sf_nav'; i.value = v; f.appendChild(i);
+    HTMLFormElement.prototype.submit.call(f);
+  }, value)]);
+}
 /** Through to the end: Next on every page, then Send on Check your answers if there is one.
  *  (The offline human check holds the submit until it's solved, then sends it by itself.) Stops at an error summary. */
 export async function submit(p) {
