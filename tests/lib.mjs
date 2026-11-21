@@ -230,7 +230,11 @@ export async function fill(p, values) {
     if (tag === 'select') await first.selectOption(Array.isArray(v) ? v : String(v));
     else if (type === 'checkbox' && !Array.isArray(v)) { if (v) await first.check(); else await first.uncheck(); }
     else if (type === 'checkbox' || type === 'radio') {
-      for (const one of [].concat(v)) await p.locator(`[name="sf[${k}]"][value="${one}"], [name="sf[${k}][]"][value="${one}"]`).check();
+      for (const one of [].concat(v)) {
+        const box = p.locator(`[name="sf[${k}]"][value="${one}"], [name="sf[${k}][]"][value="${one}"]`);
+        // Image choices hide the box behind the picture: tick it directly when a click can't.
+        await box.check({ timeout: 3000 }).catch(() => box.evaluate((e) => { e.checked = true; e.dispatchEvent(new Event('change', { bubbles: true })); }));
+      }
     } else await first.fill(String(v));
   }
 }
