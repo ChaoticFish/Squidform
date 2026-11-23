@@ -20,7 +20,7 @@ $expect = $isForm ? ($this->forms[0]->alias ?? '') : (string) \count($this->ids)
 ?>
 <form action="<?php echo Route::_('index.php?option=com_squidform&view=purge'); ?>" method="post" name="adminForm" id="adminForm">
 	<div class="card card-body border-danger">
-		<h2 class="h4 text-danger"><?php echo Text::_($isForm ? 'COM_SQUIDFORM_PURGE_FORM_HEADING' : 'COM_SQUIDFORM_PURGE_SUBMISSIONS_HEADING'); ?></h2>
+		<h2 class="h4 text-danger-emphasis"><?php echo Text::_($isForm ? 'COM_SQUIDFORM_PURGE_FORM_HEADING' : 'COM_SQUIDFORM_PURGE_SUBMISSIONS_HEADING'); ?></h2>
 
 		<?php if ($this->skipped) : ?>
 			<div class="alert alert-warning"><?php echo Text::sprintf($isForm ? 'COM_SQUIDFORM_PURGE_FORMS_SKIPPED' : 'COM_SQUIDFORM_PURGE_SKIPPED', $this->skipped); ?></div>

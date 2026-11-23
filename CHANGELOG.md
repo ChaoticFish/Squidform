@@ -8,6 +8,7 @@ The detailed entries before 1.0.3 were lost with the old source folder (2026-11-
 - **Site viewer filters** didn't work with search-engine-friendly URLs switched off: the filter form's hidden inputs came out as `amp;view`. (Found by the rebuilt viewer test.)
 - **Builder:** a dropdown's, radio list's or tick-box list's Choices settings showed a stray "null" (screen readers read it out). A new test opens every field type's settings and checks for this.
 - **Accessibility (WCAG 2.4.2):** a form's page now has its own browser title: the form's title (or the menu item's page title), with the step first on a form with several pages ("Step 2 of 3: Contact details - Visitor request"). Before, it kept the home page's title.
+- **Accessibility:** a submission whose summary was blank had a link with no words in the admin Submissions list (now "(no values)"). In Atum's dark mode, the Reject, Withdraw and Remove delegate buttons and the Delete permanently heading were too faint; they now use colours that read in both modes.
 
 ### Scanner Tools add-on 1.0.3
 - **Rebuilt** from SquidForm's `ScannerAddonInterface` (the 1.0.1/1.0.2 source was lost). Same job: the "ClamAV program" scan mode and the EICAR test. Installs over 1.0.1/1.0.2.

@@ -27,7 +27,7 @@ if (!$d['canWithdraw'] && !$d['canResubmit']) {
 		<button type="submit" class="btn btn-primary" name="task" value="approval.resubmit"><?php echo Text::_('COM_SQUIDFORM_APPROVAL_RESUBMIT'); ?></button>
 	<?php endif; ?>
 	<?php if ($d['canWithdraw']) : ?>
-		<button type="submit" class="btn btn-outline-danger" name="task" value="approval.withdraw" data-sf-confirm="<?php echo $e(Text::_('COM_SQUIDFORM_APPROVAL_WITHDRAW_CONFIRM')); ?>"><?php echo Text::_('COM_SQUIDFORM_APPROVAL_WITHDRAW'); ?></button>
+		<button type="submit" class="btn btn-danger" name="task" value="approval.withdraw" data-sf-confirm="<?php echo $e(Text::_('COM_SQUIDFORM_APPROVAL_WITHDRAW_CONFIRM')); ?>"><?php echo Text::_('COM_SQUIDFORM_APPROVAL_WITHDRAW'); ?></button>
 	<?php endif; ?>
 	<input type="hidden" name="uid" value="<?php echo $e($item->uid); ?>">
 	<input type="hidden" name="sf_return" value="<?php echo $e(base64_encode($d['return'])); ?>">

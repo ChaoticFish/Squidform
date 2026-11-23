@@ -56,7 +56,7 @@ $this->getDocument()->getWebAssetManager()->useScript('table.columns')->useScrip
 								<?php echo HTMLHelper::_('jgrid.checkedout', $i, $item->editor_name ?: ('#' . (int) $item->checked_out), $item->checked_out_time, 'submissions.', \SquidForm\Component\SquidForm\Administrator\Engine\SubmissionService::canCheckin($item)); ?>
 							<?php endif; ?>
 							<a href="<?php echo Route::_('index.php?option=com_squidform&view=submission&id=' . (int) $item->id); ?>">
-								<?php echo $this->escape($this->summaries[(int) $item->id] ?? Text::_('COM_SQUIDFORM_EMPTY_SUBMISSION')); ?>
+								<?php echo $this->escape((trim((string) ($this->summaries[(int) $item->id] ?? '')) ?: Text::_('COM_SQUIDFORM_EMPTY_SUBMISSION'))); ?>
 							</a>
 						</th>
 						<td><?php echo $this->escape($item->form_title ?? ('#' . $item->form_id)); ?></td>

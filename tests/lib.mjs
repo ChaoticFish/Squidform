@@ -193,8 +193,11 @@ export async function page(opts = {}) {
   return p;
 }
 /** An administrator page, signed in as admin (or another back-end user). */
-export async function admin(username = 'admin', password = PASS) {
-  const p = await page();
+export async function admin(username = 'admin', password = PASS, opts = {}) {
+  const { dark, ...rest } = opts;
+  const p = await page(dark ? { colorScheme: 'dark', ...rest } : rest);
+  // Atum follows the computer's setting through a cookie its script sets; set it up front.
+  if (dark) await p.context().addCookies([{ name: 'osColorScheme', value: 'dark', url: BASE }]);
   await p.goto(`${BASE}/administrator/index.php`);
   await p.fill('#mod-login-username', username);
   await p.fill('#mod-login-password', password);

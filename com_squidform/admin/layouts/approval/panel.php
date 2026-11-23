@@ -41,7 +41,7 @@ $hidden = '<input type="hidden" name="uid" value="' . $e($item->uid) . '">'
 			<?php if ($flow['allow_return']) : ?>
 				<button type="submit" class="btn btn-outline-secondary" name="task" value="approval.return"><?php echo Text::_('COM_SQUIDFORM_APPROVAL_RETURN'); ?></button>
 			<?php endif; ?>
-			<button type="submit" class="btn btn-outline-danger" name="task" value="approval.reject" data-sf-confirm="<?php echo $e(Text::_('COM_SQUIDFORM_APPROVAL_REJECT_CONFIRM')); ?>"><?php echo Text::_('COM_SQUIDFORM_APPROVAL_REJECT'); ?></button>
+			<button type="submit" class="btn btn-danger" name="task" value="approval.reject" data-sf-confirm="<?php echo $e(Text::_('COM_SQUIDFORM_APPROVAL_REJECT_CONFIRM')); ?>"><?php echo Text::_('COM_SQUIDFORM_APPROVAL_REJECT'); ?></button>
 		</div>
 		<?php echo $hidden; ?>
 	</form>

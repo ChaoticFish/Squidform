@@ -52,7 +52,7 @@ $day = static fn ($v) => $v ? HTMLHelper::_('date', $v . ' 12:00:00', Text::_('D
 						<td>
 							<?php if ((int) $r->user_id === $d['me'] || $d['forAnyone']) : ?>
 								<form action="<?php echo $e($d['action']); ?>" method="post">
-									<button type="submit" class="btn btn-sm btn-outline-danger" name="task" value="approval.removeDelegate"
+									<button type="submit" class="btn btn-sm btn-danger" name="task" value="approval.removeDelegate"
 										aria-label="<?php echo $e(Text::sprintf('COM_SQUIDFORM_DELEGATE_REMOVE_N', $r->delegate_name, $r->user_name)); ?>"><?php echo Text::_('COM_SQUIDFORM_DELEGATE_REMOVE'); ?></button>
 									<input type="hidden" name="sf_delegation" value="<?php echo (int) $r->id; ?>">
 									<?php echo $ret . HTMLHelper::_('form.token'); ?>
