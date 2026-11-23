@@ -18,9 +18,7 @@ const fields = [
   { key: 'f_note', type: 'textarea', label: 'Note', counter: true, rules: { max_length: 200 } },
   { key: 's_box', type: 'section', label: 'A boxed section', style: 'box', fields: [{ key: 'f_in', type: 'text', label: 'Inside' }] },
 ];
-// Cassiopeia has no dark mode of its own, so dark mode here is what a dark-mode template does:
-// [data-bs-theme="dark"] on <html> and Bootstrap's dark page colours.
-const darken = (g) => g.evaluate(() => { document.documentElement.setAttribute('data-bs-theme', 'dark'); const st = document.createElement('style'); st.textContent = 'body,.site-grid,.container-component,main{background:#212529!important;color:#dee2e6!important}'; document.head.appendChild(st); });
+const darken = (g) => L.darkTemplate(g); // Cassiopeia has no dark mode: act like a template that has one
 const looks = ['simple', 'elegant', 'chaotic', 'civic', 'friendly'];
 
 for (const look of looks) {

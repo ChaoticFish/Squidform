@@ -242,6 +242,26 @@ export async function fill(p, values) {
 export async function next(p, value = 'next') {
   await Promise.all([p.waitForNavigation({ timeout: 30000 }), p.locator(`button[name="sf_nav"][value="${value}"]`).first().click()]);
 }
+/**
+ * Dark mode as a dark-capable template gives it (Cassiopeia has none): [data-bs-theme="dark"]
+ * on <html> plus Bootstrap 5.3's own dark colours, and Cassiopeia's colour names pointed at them.
+ */
+export async function darkTemplate(p) {
+  await p.evaluate(() => {
+    document.documentElement.setAttribute('data-bs-theme', 'dark');
+    const st = document.createElement('style');
+    st.id = 'sf-test-dark';
+    st.textContent = `html[data-bs-theme=dark]{--bs-body-color:#dee2e6;--bs-body-color-rgb:222,226,230;--bs-body-bg:#212529;--bs-body-bg-rgb:33,37,41;--bs-emphasis-color:#fff;--bs-secondary-color:rgba(222,226,230,.75);--bs-secondary-bg:#343a40;--bs-tertiary-color:rgba(222,226,230,.5);--bs-tertiary-bg:#2b3035;--bs-heading-color:inherit;--bs-link-color:#6ea8fe;--bs-link-color-rgb:110,168,254;--bs-link-hover-color:#8bb9fe;--bs-border-color:#495057;--bs-border-color-translucent:rgba(255,255,255,.15);--bs-form-valid-color:#75b798;--bs-form-invalid-color:#ea868f;--bs-form-invalid-border-color:#ea868f;--bs-danger-text-emphasis:#ea868f;--bs-danger-bg-subtle:#2c0b0e;--bs-danger-border-subtle:#842029;--bs-success-text-emphasis:#75b798;--bs-info-text-emphasis:#6edff6;--bs-warning-text-emphasis:#ffda6a;--bs-primary-text-emphasis:#6ea8fe;--body-color:#dee2e6;--body-bg:#212529;--cassiopeia-color-text:#dee2e6;color-scheme:dark}
+html[data-bs-theme=dark] body{background:#212529;color:#dee2e6}
+html[data-bs-theme=dark] .card{--bs-card-bg:#212529;--bs-card-color:#dee2e6;background-color:var(--bs-card-bg);color:var(--bs-card-color)}
+html[data-bs-theme=dark] .form-text,html[data-bs-theme=dark] .text-body-secondary{color:var(--bs-secondary-color)!important}
+html[data-bs-theme=dark] .invalid-feedback{color:var(--bs-form-invalid-color)}
+html[data-bs-theme=dark] .alert-danger{--bs-alert-color:var(--bs-danger-text-emphasis);--bs-alert-bg:var(--bs-danger-bg-subtle);--bs-alert-border-color:var(--bs-danger-border-subtle)}
+html[data-bs-theme=dark] .form-control,html[data-bs-theme=dark] .form-select{background-color:var(--bs-body-bg);color:var(--bs-body-color);border-color:var(--bs-border-color)}`;
+    document.head.appendChild(st);
+  });
+  await p.waitForTimeout(600); // buttons fade between colours; a real dark site is dark from the start
+}
 /** Next, posted straight to the server: skips the browser's checks and the form's own script (to test the server's). */
 export async function rawNext(p, value = 'next') {
   await Promise.all([p.waitForNavigation({ timeout: 30000 }), p.evaluate((v) => {
