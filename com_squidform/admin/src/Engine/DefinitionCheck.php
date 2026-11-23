@@ -74,6 +74,78 @@ final class DefinitionCheck
         return ['schema' => $problems ? null : $schema, 'problems' => $problems];
     }
 
+    /**
+     * Things to look at before a form goes live, which don't stop it being
+     * saved (1.0.4): text in emails and messages that looks like a
+     * placeholder but isn't one (it would go out exactly as written).
+     *
+     * @return list<array{message: string, path: string, line: int, column: int}>
+     */
+    public static function notes(string $json): array
+    {
+        $d = json_decode($json, true);
+
+        if (!\is_array($d)) {
+            return [];
+        }
+
+        $keys = [];
+        $walk = static function (array $fields) use (&$walk, &$keys): void {
+            foreach ($fields as $f) {
+                if (\is_array($f) && isset($f['key'])) {
+                    $keys[] = (string) $f['key'];
+                    if (\is_array($f['fields'] ?? null)) {
+                        $walk($f['fields']);
+                    }
+                }
+            }
+        };
+
+        foreach ((array) ($d['pages'] ?? []) as $p) {
+            $walk(\is_array($p['fields'] ?? null) ? $p['fields'] : []);
+        }
+
+        $lists = [];
+
+        foreach ((array) ($d['pages'] ?? []) as $i => $p) {
+            foreach (['load', 'submit'] as $ev) {
+                foreach ((array) ($p['events'][$ev] ?? []) as $j => $a) {
+                    $lists['pages[' . (int) $i . '].events.' . $ev . '[' . (int) $j . ']'] = $a;
+                }
+            }
+        }
+
+        foreach (Schema::HOOKS as $hook) {
+            foreach ((array) ($d[$hook] ?? []) as $j => $a) {
+                $lists[$hook . '[' . (int) $j . ']'] = $a;
+            }
+        }
+
+        $scan  = JsonCheck::scan($json);
+        $notes = [];
+
+        foreach ($lists as $path => $a) {
+            if (!\is_array($a) || !\in_array($a['type'] ?? '', ['email', 'confirm_email', 'message'], true)) {
+                continue;
+            }
+
+            foreach (['to', 'cc', 'bcc', 'reply_to', 'subject', 'body', 'text'] as $prop) {
+                $v = $a['config'][$prop] ?? null;
+
+                if (!\is_string($v)) {
+                    continue;
+                }
+
+                foreach (Placeholders::suspicious($v, $keys) as $tok) {
+                    $msg     = Text::sprintf('COM_SQUIDFORM_NOTE_PLACEHOLDER', $path . ' ("' . ($a['key'] ?? '') . '").' . $prop, $tok);
+                    $notes[] = ['message' => $msg, 'path' => $path, 'line' => JsonCheck::lineFor($path, $scan['paths']), 'column' => 1];
+                }
+            }
+        }
+
+        return $notes;
+    }
+
     /** @param array<string, int> $paths */
     private static function problem(string $message, array $paths): array
     {

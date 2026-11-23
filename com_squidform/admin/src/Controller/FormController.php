@@ -92,7 +92,8 @@ class FormController extends BaseFormController
 
         $check = DefinitionCheck::run($json);
 
-        $this->json(['saved' => $saved, 'at' => $at, 'live_version' => $live, 'problems' => $check['problems']]);
+        $this->json(['saved' => $saved, 'at' => $at, 'live_version' => $live, 'problems' => $check['problems'],
+            'notes' => $check['problems'] ? [] : DefinitionCheck::notes($json)]);
     }
 
     /** Throw the draft away; the live version is untouched. */

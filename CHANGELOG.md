@@ -4,6 +4,10 @@ The detailed entries before 1.0.3 were lost with the old source folder (2026-11-
 
 ## Unreleased (next update)
 
+### Added
+- **`{AUTO_FIELDS}` works** (any case, spaces allowed) and means `{data:_all}`, in email subjects and bodies and messages. The ChronoForms importers turn it into `{data:_all}`. (Fishie's report: a sender's own email went out showing `{AUTO_FIELDS}`.)
+- **"Check before it goes live"**: the builder lists text in emails and messages that looks like a placeholder but isn't one (`{SOMETHING}`, an unknown `{ns:item}`, or `{data:KEY}` for a field the form doesn't have), each with a Show button. It doesn't stop publishing; Save repeats it as a warning.
+
 ### Fixed
 - **Site viewer filters** didn't work with search-engine-friendly URLs switched off: the filter form's hidden inputs came out as `amp;view`. (Found by the rebuilt viewer test.)
 - **Builder:** a dropdown's, radio list's or tick-box list's Choices settings showed a stray "null" (screen readers read it out). A new test opens every field type's settings and checks for this.

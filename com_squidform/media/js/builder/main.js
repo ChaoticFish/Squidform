@@ -276,7 +276,7 @@ B.readable = (text) => String(text ?? '').replace(/\{([a-z_.]+):([^}]*)\}/gi, (a
 /* ------------------------------------------------------------------ state */
 
 B.state = {
-  model: null, section: 'fields', page: 0, sel: null, mode: 'builder', problems: [], fresh: new WeakSet(), logicPage: 0, hooks: false,
+  model: null, section: 'fields', page: 0, sel: null, mode: 'builder', problems: [], notes: [], fresh: new WeakSet(), logicPage: 0, hooks: false,
 };
 const hist = { undo: [], redo: [] };
 let ta; let opts; let root; let mainEl; let statusEl; let problemsEl; let undoBtn; let redoBtn;
@@ -408,9 +408,11 @@ B.problemsFor = (match) => B.state.problems.filter((p) => { const t = problemTar
 
 function renderProblems() {
   problemsEl.textContent = '';
-  const list = B.state.problems;
-  if (!list.length) { problemsEl.hidden = true; return; }
+  const problems = B.state.problems;
+  const notes = problems.length ? [] : (B.state.notes || []);
+  if (!problems.length && !notes.length) { problemsEl.hidden = true; return; }
   problemsEl.hidden = false;
+  const list = problems.length ? problems : notes;
   const json = B.state.mode === 'json';
   const ul = B.h('ul.mb-0');
   list.forEach((p) => {
@@ -429,7 +431,9 @@ function renderProblems() {
     const where = json && p.line > 0 && !/line \d+/.test(p.message) ? ` (line ${p.line})` : '';
     ul.append(B.h('li', p.message + where, ' ', action));
   });
-  problemsEl.append(B.h('p.fw-semibold.mb-1', `Can't publish yet: ${list.length} problem${list.length > 1 ? 's' : ''}`), ul);
+  problemsEl.append(B.h('p.fw-semibold.mb-1', problems.length
+    ? `Can't publish yet: ${list.length} problem${list.length > 1 ? 's' : ''}`
+    : `Check before it goes live: ${list.length} thing${list.length > 1 ? 's' : ''} that would go out as written`), ul);
 }
 
 /** Select a line of the JSON box (switching to JSON first). */
@@ -491,6 +495,7 @@ async function saveNow() {
     if (!res.ok || data.success === false) throw new Error(data.error || res.statusText);
     lastSent = json;
     B.state.problems = data.problems || [];
+    B.state.notes = data.notes || []; // 1.0.4: worth a look, but don't stop publishing
     if (opts.id && data.saved) lastStatus = `Draft saved ${data.at}. People still see version ${data.live_version}.`;
     else if (opts.id) lastStatus = 'No unpublished changes.';
     else lastStatus = 'New form: Save it once to keep a draft.';

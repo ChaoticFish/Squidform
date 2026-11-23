@@ -109,6 +109,8 @@ final class Placeholders
             return $text;
         }
 
+        $text = self::aliases($text);
+
         return (string) preg_replace_callback(self::PATTERN, function (array $m) use ($mode) {
             [$all, $ns, $mod, $name] = $m;
 
@@ -138,6 +140,52 @@ final class Placeholders
 
             return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
         }, $text);
+    }
+
+    /**
+     * Other names for placeholders (1.0.4): {AUTO_FIELDS}, from ChronoForms
+     * (any case), is {data:_all}.
+     */
+    public static function aliases(string $text): string
+    {
+        return str_contains($text, '{') ? (string) preg_replace('/\{\s*auto_fields\s*\}/i', '{data:_all}', $text) : $text;
+    }
+
+    /**
+     * Things in a text that look like placeholders but aren't (1.0.4), so the
+     * builder can say so before a form goes live: {SOMETHING} without a
+     * namespace, {ns:item} with a namespace nobody provides, and {data:KEY}
+     * for a key the form doesn't have. {AUTO_FIELDS} is fine (an alias).
+     *
+     * @param   list<string>  $keys  every field key in the form
+     * @return  list<string>  each suspicious token once, as written
+     */
+    public static function suspicious(string $text, array $keys): array
+    {
+        if (!str_contains($text, '{')) {
+            return [];
+        }
+
+        $text = self::aliases($text);
+        $out  = [];
+        $ns   = array_merge(self::BUILT_IN, array_keys(self::addons()));
+
+        // {Word} or {WORD_TWO}: no namespace.
+        if (preg_match_all('/\{\s*([A-Za-z][A-Za-z0-9_]{0,60})\s*\}/', $text, $m)) {
+            array_push($out, ...$m[0]);
+        }
+
+        if (preg_match_all(self::PATTERN, $text, $m, PREG_SET_ORDER)) {
+            foreach ($m as [$all, $space, , $name]) {
+                if (!\in_array($space, $ns, true)) {
+                    $out[] = $all;
+                } elseif ($space === 'data' && $name !== '_all' && !\in_array(explode('.', $name)[0], $keys, true)) {
+                    $out[] = $all;
+                }
+            }
+        }
+
+        return array_values(array_unique($out));
     }
 
     /**

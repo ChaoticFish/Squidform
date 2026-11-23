@@ -72,6 +72,10 @@ switch ($cmd) {
         $db->setQuery($q)->execute();
         echo "ok\n";
         break;
+    case 'notes':
+        // DefinitionCheck::notes for a definition file (1.0.4): what would go out as written.
+        echo json_encode(\SquidForm\Component\SquidForm\Administrator\Engine\DefinitionCheck::notes((string) file_get_contents($argv[3]))), "\n";
+        break;
     case 'eval-api':
         $api = \SquidForm\Component\SquidForm\Administrator\Api\Submissions::form($argv[3]);
         echo json_encode($api ? $api->find(json_decode($argv[4] ?? '{}', true) ?: []) : null), "\n";

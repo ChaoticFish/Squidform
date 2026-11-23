@@ -237,6 +237,11 @@ class FormModel extends AdminModel
             }
 
             $db->transactionCommit();
+
+            // 1.0.4: on every Save, say what in emails and messages would go out as written.
+            foreach (\array_slice(DefinitionCheck::notes($normalised), 0, 10) as $n) {
+                Factory::getApplication()->enqueueMessage($n['message'], 'warning');
+            }
         } catch (\Throwable $e) {
             $db->transactionRollback();
             $this->setError($e->getMessage());

@@ -1126,6 +1126,9 @@ final class Cf8Converter
     /** {data:cf_name} → {data:key}; {email:data_table} → {data:_all}; others reported. */
     private function placeholders(string $s, string $what): string
     {
+        // {AUTO_FIELDS} (a ChronoForms habit) becomes {data:_all} (1.0.4).
+        $s = \SquidForm\Component\SquidForm\Administrator\Engine\Placeholders::aliases($s);
+
         return (string) preg_replace_callback('/\{([a-z_.]+):([^}]*)\}/i', function ($m) use ($what) {
             [$all, $ns, $name] = $m;
 
