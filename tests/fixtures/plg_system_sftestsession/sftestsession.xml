@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="plugin" group="system" method="upgrade">
+	<name>SquidForm test session (tests only)</name>
+	<author>Chaotic Fish Design</author>
+	<license>GNU General Public License version 2 or later</license>
+	<version>1.0.0</version>
+	<description>For SquidForm's e2e-015.mjs only: plays a sign-on script, putting "abcdefuser" in the session for the account sf_sess_user. Never install on a real site.</description>
+	<namespace path="src">SquidForm\Plugin\System\SfTestSession</namespace>
+	<files>
+		<folder plugin="sftestsession">services</folder>
+		<folder>src</folder>
+	</files>
+</extension>
