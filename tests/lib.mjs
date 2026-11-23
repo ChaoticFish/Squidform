@@ -276,11 +276,12 @@ export async function rawNext(p, value = 'next') {
 /** Through to the end: Next on every page, then Send on Check your answers if there is one.
  *  (The offline human check holds the submit until it's solved, then sends it by itself.) Stops at an error summary. */
 export async function submit(p) {
+  // Press on first (a page may still show the errors from an earlier try), then look for new ones.
   for (let i = 0; i < 20; i++) {
-    if (await p.locator('.sf-error-summary').count()) return false;
     if (await p.locator('button[name="sf_nav"][value="send"]').count()) { await next(p, 'send'); return !(await p.locator('.sf-error-summary').count()); }
-    if (!(await p.locator('button[name="sf_nav"][value="next"]').count())) return true;
+    if (!(await p.locator('button[name="sf_nav"][value="next"]').count())) return !(await p.locator('.sf-error-summary').count());
     await next(p, 'next');
+    if (await p.locator('.sf-error-summary').count()) return false;
   }
   return false;
 }
