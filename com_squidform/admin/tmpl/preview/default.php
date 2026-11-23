@@ -73,6 +73,11 @@ $this->getDocument()->getWebAssetManager()->addInlineScript(<<<'JS'
     set(b.dataset.sfMode);
     try { localStorage.setItem('squidform.preview.mode', b.dataset.sfMode); } catch (e2) {}
   });
+  // 1.0.4: Escape closes Preview even after a click inside it (the key goes to this page, not the dialog).
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape' || window.parent === window) return;
+    try { const d = window.parent.document.getElementById('sf-preview-dialog'); if (d && d.open) { e.preventDefault(); d.close(); } } catch (e3) {}
+  });
 })();
 JS, ['name' => 'com_squidform.preview.mode']);
 ?>

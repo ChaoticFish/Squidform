@@ -34,7 +34,7 @@ export function ok(cond, msg) {
   return !!cond;
 }
 export async function step(what, fn) {
-  try { await fn(); } catch (e) { ok(false, `${what}: ran (${String(e.message).split('\n')[0]})`); }
+  try { await fn(); } catch (e) { ok(false, `${what}: ran (${process.env.FULL ? String(e.message).split('\n').slice(0, 8).join(' / ') : String(e.message).split('\n')[0]})`); }
 }
 export function finish() {
   console.log(`${passed} pass, ${failed} fail`);
