@@ -6,6 +6,8 @@
 #   squidform-<version>-IT-review.md            the IT review kit (from docs/IT-REVIEW.md)
 #   pkg_squidform-<version>-source.zip          everything: code, tests, docs, this script (keep it with the release)
 #
+#   plg_squidform_scannertools holds the EICAR string only split into reversed base64 pieces.
+#
 # Usage:  ./build.sh                 (needs: zip, php)
 #         PHPCS=/path/to/phpcs ./build.sh   also checks PHP 8.2–8.5 compatibility (PHPCompatibility standard)
 #
@@ -24,6 +26,9 @@ WORK=$(mktemp -d)
 trap 'rm -rf "$WORK"' EXIT
 PARTS=(com_squidform mod_squidform mod_squidform_viewer plg_system_squidform)
 ADDON=plg_squidform_scannertools
+# The add-on lives in its own repository (squidform-scannertools), cloned next to this one.
+ADDON_DIR=${ADDON_DIR:-../squidform-scannertools}
+[ -d "$ADDON" ] || { [ -d "$ADDON_DIR" ] && ln -sfn "$(cd "$ADDON_DIR" && pwd)" "$ADDON"; } || true
 fail() { echo "BUILD STOPPED: $*" >&2; exit 1; }
 
 echo "SquidForm $VERSION"
@@ -37,7 +42,7 @@ grep -q "^## $VERSION " CHANGELOG.md || fail "CHANGELOG.md has no \"## $VERSION\
 
 echo "· PHP syntax…"
 find "${PARTS[@]}" script.php -name '*.php' -print0 | xargs -0 -n1 php -l > /dev/null
-[ -d "$ADDON" ] && find "$ADDON" -name '*.php' -print0 | xargs -0 -n1 php -l > /dev/null
+[ -d "$ADDON" ] && find -H "$ADDON" -name '*.php' -print0 | xargs -0 -n1 php -l > /dev/null
 
 if [ -n "${PHPCS:-}" ]; then
   echo "· PHP 8.2–8.5 compatibility…"
@@ -48,8 +53,15 @@ echo "· nothing that runs programs or code…"
 if grep -RInE '\b(proc_open|shell_exec|passthru|popen|pcntl_exec)\s*\(|(^|[^A-Za-z_>:$])(exec|system|eval)\s*\(' --include='*.php' "${PARTS[@]}" script.php; then
   fail "a shipped PHP file runs programs or code (see above)"
 fi
-if grep -RIl 'X5O!P%@AP\[4\\PZX54(P^)7CC)7}\$EICAR' . --exclude-dir=.git --exclude-dir=dist --exclude-dir=node_modules 2>/dev/null; then
+# The patterns are put together here, back to front, so this script doesn't contain them either.
+EICAR_RAW=$(printf '%s' 'RACIE$}7)CC7)^P(45XZP\4[PA@%P!O5X' | rev)
+EICAR_B64=$(printf '%s' 'SF0QJVEJ9dTKDN0Np4FUoQTNYpFUcRzWQFEQlAVIPVDW' | rev)
+if grep -RIlF "$EICAR_RAW" . --exclude-dir=.git --exclude-dir=dist --exclude-dir=node_modules 2>/dev/null; then
   fail "the EICAR test string is in a file (it must only exist base64-encoded in the add-on)"
+fi
+# Nor base64-encoded in one piece (some filters decode base64): the add-on keeps it split up.
+if grep -RIlF "$EICAR_B64" . --exclude-dir=.git --exclude-dir=dist --exclude-dir=node_modules 2>/dev/null; then
+  fail "the EICAR test string is in a file base64-encoded in one piece (keep it split, as the add-on does)"
 fi
 if find "${PARTS[@]}" -type f | grep -E '\.php\.[A-Za-z0-9]+$'; then
   fail "a file is named like something.php.ext"
@@ -71,7 +83,7 @@ ADDON_VERSION=""
 if [ -d "$ADDON" ]; then
   ADDON_VERSION=$(sed -n 's:.*<version>\(.*\)</version>.*:\1:p' "$ADDON/scannertools.xml" | head -1)
   rm -f "$OUT/$ADDON-$ADDON_VERSION.zip"
-  (cd "$ADDON" && zip -qrX "$OLDPWD/$OUT/$ADDON-$ADDON_VERSION.zip" . -x '*.DS_Store')
+  (cd "$ADDON" && zip -qrX "$OLDPWD/$OUT/$ADDON-$ADDON_VERSION.zip" . -x '*.DS_Store' -x '.git/*' -x '.git')
 else
   echo "  (no $ADDON folder here: the add-on zip isn't rebuilt; it hasn't changed since 1.0.2)"
 fi
@@ -81,7 +93,7 @@ SUMS="$OUT/squidform-$VERSION-SHA256SUMS.txt"
 {
   echo "# SquidForm $VERSION: SHA-256 of every file, as installed from each zip"
   for p in "${PARTS[@]}"; do (find "$p" -type f ! -name '.DS_Store' -print0 | sort -z | xargs -0 sha256sum); done
-  [ -d "$ADDON" ] && (find "$ADDON" -type f ! -name '.DS_Store' -print0 | sort -z | xargs -0 sha256sum)
+  [ -d "$ADDON" ] && (find -H "$ADDON" -type f -not -path "*/.git/*" ! -name '.DS_Store' -print0 | sort -z | xargs -0 sha256sum)
   true
 } > "$SUMS"
 FILECOUNT=$(grep -vc '^#' "$SUMS")
@@ -109,7 +121,7 @@ rm -rf "$CHECK"
 
 echo "· source zip (keep it with the release)…"
 rm -f "$OUT/pkg_squidform-$VERSION-source.zip"
-zip -qrX "$OUT/pkg_squidform-$VERSION-source.zip" . -x 'dist/*' -x '.git/*' -x '*/node_modules/*' -x 'node_modules/*' -x '*.DS_Store' -x 'tests/results/*'
+zip -qrX "$OUT/pkg_squidform-$VERSION-source.zip" . -x 'dist/*' -x '.git/*' -x '*/node_modules/*' -x 'node_modules/*' -x '*.DS_Store' -x 'tests/results/*' -x 'plg_squidform_scannertools' -x 'plg_squidform_scannertools/*'
 
 echo "Built $OUT/pkg_squidform-$VERSION.zip ($FILECOUNT files checked), the IT review kit and the source zip."
 cat "$OUT/pkg_squidform-$VERSION.zip.sha256"

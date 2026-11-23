@@ -1,0 +1,12 @@
+#!/usr/bin/env php
+<?php
+// A stand-in for ClamAV's clamdscan, for tests only. Same output and exit codes:
+// 0 clean, 1 found, 2 error. "Infected" = the EICAR file (by its SHA-256) or the
+// harmless marker SQUIDFORM-TEST-INFECTED. Logs its arguments for the test to check.
+$file = end($argv);
+file_put_contents(__DIR__ . '/last-args.json', json_encode(array_slice($argv, 1)));
+if (!is_file($file)) { fwrite(STDERR, "$file: No such file\n"); exit(2); }
+$b = file_get_contents($file);
+if (hash('sha256', $b) === '275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f') { echo "$file: Eicar-Signature FOUND\n"; exit(1); }
+if (str_contains($b, 'SQUIDFORM-TEST-INFECTED')) { echo "$file: SquidForm.Test.Marker FOUND\n"; exit(1); }
+echo "$file: OK\n"; exit(0);

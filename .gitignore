@@ -1,3 +1,5 @@
 node_modules/
 dist/
 tests/results/
+tests/tools/fake-clamav/last-args.json
+/plg_squidform_scannertools

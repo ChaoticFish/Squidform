@@ -50,7 +50,7 @@ The build refuses to make a package containing `proc_open`, `shell_exec`, `passt
 `plg_squidform_scannertools` adds two things, kept out of the package on purpose because they are what upload and malware filters most often block:
 
 - **"ClamAV program" mode**: runs `clamdscan` or `clamscan` on an uploaded file with PHP's `proc_open`, with a fixed argument list (no shell, nothing from the form or the visitor). The daemon mode in the package needs none of this.
-- **The EICAR test**: the industry-standard harmless test file (kept base64-encoded), sent from memory to the scanner when an admin presses **Test with the EICAR file** in Check this server. It's never written to the site's folders; in program mode a temporary copy is scanned and deleted.
+- **The EICAR test**: the industry-standard harmless test file (kept base64-encoded and split into reversed pieces, so the string never appears in the file, encoded or not; it's put together in memory only), sent from memory to the scanner when an admin presses **Test with the EICAR file** in Check this server. It's never written to the site's folders; in program mode a temporary copy is scanned and deleted.
 
 Without the add-on, Check this server says it's optional, the EICAR button is off, and if "ClamAV program" mode is set, uploads report that the add-on is needed (the "if scanning fails" Option decides whether they're kept).
 

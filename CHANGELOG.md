@@ -9,6 +9,12 @@ The detailed entries before 1.0.3 were lost with the old source folder (2026-11-
 - **Builder:** a dropdown's, radio list's or tick-box list's Choices settings showed a stray "null" (screen readers read it out). A new test opens every field type's settings and checks for this.
 - **Accessibility (WCAG 2.4.2):** a form's page now has its own browser title: the form's title (or the menu item's page title), with the step first on a form with several pages ("Step 2 of 3: Contact details - Visitor request"). Before, it kept the home page's title.
 
+### Scanner Tools add-on 1.0.3
+- **Rebuilt** from SquidForm's `ScannerAddonInterface` (the 1.0.1/1.0.2 source was lost). Same job: the "ClamAV program" scan mode and the EICAR test. Installs over 1.0.1/1.0.2.
+- The EICAR test string is now stored base64-encoded **in reversed pieces**, so the add-on's zip no longer trips upload filters that decode base64. The build refuses a file holding it in one piece, encoded or not.
+- Program mode runs only a program named `clamdscan` or `clamscan` (checked by name and by its real path), with a fixed argument list and `--` before the file, and stops a scan after 120 seconds.
+- New test suite (`e2e-scanner.mjs`) with stand-ins for the ClamAV daemon and `clamdscan` that know the EICAR file only by its SHA-256.
+
 ## 1.0.3 (2026-11-20): add-on hooks
 
 Code only: no new tables, nothing changes for existing forms. Everything here lies dormant until an add-on (or a form) uses it.
